@@ -1,4 +1,4 @@
-import Cell from './cell.mjs';
+import Cell from './cell.mjs'
 
 class IOCell extends Cell {
   constructor(parent, machine, offsetX, offsetY) {
@@ -30,7 +30,7 @@ class IOCell extends Cell {
   }
 }
 
-class Operator extends Cell {
+export default class Operator extends Cell {
   static type;       // Unique type for the operator
   static letter;     // Single-character letter to represent the operator
   static description;
@@ -185,5 +185,3 @@ class Operator extends Cell {
     }
   }
 }
-
-export default Operator;

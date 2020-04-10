@@ -1,6 +1,6 @@
-import Grid from '/core/grid.mjs';
-import Cell from '/core/cell.mjs';
-import Operator from '/core/operator.mjs';
+import Operator from '/core/operator.mjs'
+import Grid from '/core/grid.mjs'
+import Cell from '/core/cell.mjs'
 import * as Loader from '/core/loader.mjs';
 import {Mov} from '/core/operators/index.mjs';
 import operatorRenderer from './operator_renderer.mjs';
@@ -13,12 +13,12 @@ function createElement(type, className, parent) {
   if (parent) parent.appendChild(node);
   return node;
 }
-
 export default class UI {
   static COLOR_OPERATOR = 'rgb(0, 255, 150)';
   static COLOR_WIRE = 'rgb(0, 255, 150)';
   static COLOR_FIELD = 'rgba(0, 255, 150, 0.25)';
   static COLOR_DATA = 'white';
+  static COLOR_GRID = '#222';
   static GRID_FONT = '16px grid, Consolas, Menlo';
 
   static CELL_WIDTH = 12;
@@ -65,8 +65,8 @@ export default class UI {
     window.addEventListener('mouseup', this.handleMouseUp.bind(this));
 
     document.addEventListener('keydown', this.handleKeyDown.bind(this));
-    this.focusedCellPos = { x : -1, y : -1};
-    this.hoverCellPos = { x : -1, y : -1};
+    this.focusedCellPos = { x : 0, y : 0};
+    this.hoverCellPos = { x : -1000, y : -1000};
 
     this.initCanvases();
     this.play();
@@ -78,7 +78,7 @@ export default class UI {
     this.backgroundCtx = this.backgroundGrid.getContext("2d");
     this.backgroundCtx.fillStyle = '#000';
     this.backgroundCtx.fillRect(0, 0, this.backgroundGrid.width, this.backgroundGrid.height);
-    this.backgroundCtx.fillStyle = '#111';
+    this.backgroundCtx.fillStyle = UI.COLOR_GRID;
     for (var x = 0; x < this.backgroundGrid.width; x += UI.CELL_WIDTH) {
       for (var y = 0; y < this.backgroundGrid.height; y += UI.CELL_HEIGHT) {
         this.backgroundCtx.fillRect(x + UI.CELL_WIDTH / 2 - 1, y + UI.CELL_HEIGHT / 2 - 1, 2, 2);

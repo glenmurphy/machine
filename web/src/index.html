@@ -2,11 +2,20 @@
 <head>
   <title>MACHINE ALFA</title>
   <link rel="stylesheet" href="style.css" />
-  <script type="module">
-    import UI from './ui.mjs';
-    var ui = new UI();
-  </script>
 </head>
 <body>
+  <div id="warning" onclick="this.style.display = 'none';">
+    Sorry, you need a browser with full ES6 support (static fields!)
+    <br /> <br />
+    Chrome, Firefox, or Edge will work
+  </div>
 </body>
+<script type="text/javascript">
+  if (window.safari !== undefined)
+    document.getElementById('warning').style.display = 'block';
+</script>
+<script type="module">
+  import UI from './ui.mjs';
+  var ui = new UI();
+</script>
 </html>

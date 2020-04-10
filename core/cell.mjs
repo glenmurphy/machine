@@ -1,4 +1,4 @@
-class Cell {
+export default class Cell {
   // To figure out stacked orientations, just add these together and % 4 them
   static ORIENTATION = {
     UP : 0,
@@ -6,6 +6,7 @@ class Cell {
     DOWN : 2,
     RIGHT : 3
   }
+
   static RotateOffset(x, y, orientation) {
     // e.g. x=1, y=-10 (towards top of screen)
     if (orientation == Cell.ORIENTATION.UP) {
@@ -56,5 +57,3 @@ class Cell {
     }
   }
 }
-
-export default Cell;

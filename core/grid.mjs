@@ -1,7 +1,7 @@
 /**
  * The mapping technique here is rubbish; but we'll figure that out after the API
  */
-class Grid {
+export default class Grid {
   static coords(x, y) {
     return [x, y].join(",");
   }
@@ -36,5 +36,3 @@ class Grid {
     this.content = content;
   }
 }
-
-export default Grid;

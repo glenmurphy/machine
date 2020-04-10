@@ -8,7 +8,7 @@
 import Grid from './grid.mjs';
 import Cell from './cell.mjs';
 
-class Machine {
+export default class Machine {
   constructor() {
     this.operators = new Grid();
     this.data = new Grid();
@@ -65,5 +65,3 @@ class Machine {
     this.stepCount++;
   };
 }
-
-export default Machine;
