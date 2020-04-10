@@ -17,10 +17,10 @@ function createElement(type, className, parent) {
 export default class UI {
   static COLOR_OPERATOR = 'rgb(0, 255, 150)';
   static COLOR_WIRE = 'rgb(0, 255, 150)';
-  static COLOR_FIELD = 'rgba(0, 255, 150, 0.5)';
+  static COLOR_FIELD = 'rgba(0, 255, 150, 0.25)';
   static COLOR_DATA = 'white';
 
-  static CELL_WIDTH = 14;
+  static CELL_WIDTH = 12;
   static CELL_HEIGHT = 14;
 
   static posFromCell(cellX, cellY) {
