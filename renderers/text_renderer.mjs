@@ -6,7 +6,7 @@ function getChar(obj) {
     return nullChar;
   return obj.toString().charAt(0);
 }
-
+ 
 export function renderText(machine, originX, originY, width, height) {
   var output = [];
   for (var ix = 0; ix < width; ix++) {

@@ -1,3 +1,11 @@
+// This is just a test server - necessary because ES6 doesn't let us host
+// modules on file://
+//
+// To use:
+//   npm install express
+//   node server.js
+//   http://localhost:8080/
+
 var express = require('express');
 
 var path = require("path");
