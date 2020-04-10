@@ -5,6 +5,7 @@ import * as Loader from '/core/loader.mjs';
 import {Mov} from '/core/operators/index.mjs';
 import operatorRenderer from './operator_renderer.mjs';
 import Machine from '../../core/machine.mjs';
+import GetExample from './examples.mjs';
 
 function createElement(type, className, parent) {
   var node = document.createElement(type);
@@ -160,12 +161,13 @@ export default class UI {
   }
 
   load() {
+    this.machine = new Machine();
     if (window.localStorage.getItem('saved')) {
-      this.machine = new Machine();
-      Loader.load(this.machine, JSON.parse(window.localStorage.getItem('saved')));
       console.log("loaded");
+      Loader.load(this.machine, JSON.parse(window.localStorage.getItem('saved')));
     } else {
-      console.log("no saved machine");
+      console.log("no saved machine, loading example");
+      Loader.load(this.machine, JSON.parse(GetExample(1)));
     }
   }
 
