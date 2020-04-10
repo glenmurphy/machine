@@ -279,7 +279,7 @@ export default class UI {
       } else {
         console.log(key + " not found");
       }
-    } else if (e.keyCode == 8 || e.keyCode == 46) {
+    } else if (e.keyCode == 8 || e.keyCode == 46 || e.key == 'x') {
       // Delete data
       this.machine.deleteCell(this.focusedCellPos.x, this.focusedCellPos.y);
     } else if (e.keyCode == 37) { // left arrow
