@@ -140,9 +140,12 @@ export default class UI {
   }
 
   display() {
+    // As operatorGrid changes far less frequently, we should implement a
+    // dirty/schedule system so we don't redraw it as often
+
     // Clear layers
     this.operatorCtx.clearRect(0, 0, this.operatorGrid.width, this.operatorGrid.height);
-    this.dataCtx.clearRect(0, 0, this.operatorGrid.width, this.operatorGrid.height);
+    this.dataCtx.clearRect(0, 0, this.dataGrid.width, this.dataGrid.height);
 
     // Do scrolling translations
     this.operatorCtx.save();
@@ -196,13 +199,15 @@ export default class UI {
 
   load() {
     this.machine = new Machine();
+    
     if (window.localStorage.getItem('saved')) {
       console.log("loaded");
-      Loader.load(this.machine, JSON.parse(window.localStorage.getItem('saved')));
-    } else {
-      console.log("no saved machine, loading example");
-      Loader.load(this.machine, JSON.parse(GetExample(1)));
+      if (Loader.load(this.machine, JSON.parse(window.localStorage.getItem('saved'))))
+        return;
     }
+    
+    console.log("no saved machine, loading example");
+    Loader.load(this.machine, JSON.parse(GetExample(1)));
   }
 
   gridPosFromScreen(x, y) {
