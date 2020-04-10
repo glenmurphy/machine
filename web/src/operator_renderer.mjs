@@ -11,7 +11,7 @@ renderers['_'] = function(operator, ctx, x, y) {
   ctx.restore();
 }
 
-renderers['M'] = function(operator, ctx, x, y) {
+renderers['.'] = function(operator, ctx, x, y) {
   var orientation = operator.pos.orientation;
   var vert = Boolean(orientation == Cell.ORIENTATION.UP || orientation == Cell.ORIENTATION.DOWN);
   var hori = !vert;
