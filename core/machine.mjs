@@ -1,11 +1,10 @@
 /*
- * Machine 001
+ * Machine ALFA
  *
  * Inspired by Factorio, ORCA, and TIS-100
  * Much of this architecture is set up to enable experimentation over efficiency; once we have
- * efficiency, maybe we can look at doing this in C!
+ * more of an idea about what we're doing, maybe we can look at doing this in C!
  */
-//var Grid = require('./grid.js');
 import Grid from './grid.mjs';
 import Cell from './cell.mjs';
 
