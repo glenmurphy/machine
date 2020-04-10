@@ -1,5 +1,5 @@
-import Cell from "../../core/cell.mjs";
-import Operator from "../../core/operator.mjs";
+import Cell from "/core/cell.mjs";
+import Operator from "/core/operator.mjs";
 import UI from "./ui.mjs";
 
 var renderers = {};

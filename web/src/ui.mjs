@@ -4,7 +4,7 @@ import Operator from '/core/operator.mjs';
 import * as Loader from '/core/loader.mjs';
 import {Mov} from '/core/operators/index.mjs';
 import operatorRenderer from './operator_renderer.mjs';
-import Machine from '../../core/machine.mjs';
+import Machine from '/core/machine.mjs';
 import GetExample from './examples.mjs';
 
 function createElement(type, className, parent) {
@@ -19,6 +19,7 @@ export default class UI {
   static COLOR_WIRE = 'rgb(0, 255, 150)';
   static COLOR_FIELD = 'rgba(0, 255, 150, 0.25)';
   static COLOR_DATA = 'white';
+  static GRID_FONT = '16px grid, Consolas, Menlo';
 
   static CELL_WIDTH = 12;
   static CELL_HEIGHT = 14;
@@ -89,7 +90,7 @@ export default class UI {
     this.operatorCtx = this.operatorGrid.getContext("2d");
     this.operatorCtx.fillStyle = UI.COLOR_OPERATOR;
     this.operatorCtx.strokeStyle = UI.COLOR_OPERATOR;
-    this.operatorCtx.font = '16px grid';
+    this.operatorCtx.font = UI.GRID_FONT;
     this.operatorCtx.textBaseline = "middle";
     this.operatorCtx.textAlign = "center";
     this.operatorCtx.imageSmoothingEnabled = false;
@@ -101,7 +102,7 @@ export default class UI {
     this.dataCtx = this.dataGrid.getContext("2d");
     this.dataCtx.fillStyle = UI.COLOR_DATA;
     this.dataCtx.strokeStyle = UI.COLOR_DATA;
-    this.dataCtx.font = '16px grid';
+    this.dataCtx.font = UI.GRID_FONT;
     this.dataCtx.textBaseline = "middle";
     this.dataCtx.textAlign = "center";
     this.dataCtx.imageSmoothingEnabled = false;
