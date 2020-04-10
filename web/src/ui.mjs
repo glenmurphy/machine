@@ -15,18 +15,25 @@ function createElement(type, className, parent) {
 }
 
 export default class UI {
-  static cellWidth = 14;
-  static cellHeight = 14;
+  static COLOR_OPERATOR = 'rgb(0, 255, 150)';
+  static COLOR_WIRE = 'rgb(0, 255, 150)';
+  static COLOR_FIELD = 'rgba(0, 255, 150, 0.5)';
+  static COLOR_DATA = 'white';
+
+  static CELL_WIDTH = 14;
+  static CELL_HEIGHT = 14;
+
   static posFromCell(cellX, cellY) {
     return {
-      x : cellX * UI.cellWidth,
-      y : cellY * UI.cellHeight
+      x : cellX * UI.CELL_WIDTH,
+      y : cellY * UI.CELL_HEIGHT
     }
   }
+
   static cellFromPos(posX, posY) {
     return {
-      x : Math.floor(posX / UI.cellWidth),
-      y : Math.floor(posY / UI.cellHeight)
+      x : Math.floor(posX / UI.CELL_WIDTH),
+      y : Math.floor(posY / UI.CELL_HEIGHT)
     }
   }
 
@@ -37,16 +44,13 @@ export default class UI {
     this.node = createElement('div', 'main', document.body);
     this.grid = createElement('div', 'grid', this.node);
 
-    // Theme setup
-    this.themeOperatorColor = 'cyan';
-
     // Canvas setup
     this.columns = 40;
     this.rows = 25;
 
     this.backgroundGrid = createElement('canvas', 'operators', this.grid);
-    this.backgroundGrid.width = this.columns * UI.cellWidth;
-    this.backgroundGrid.height = this.rows * UI.cellHeight;
+    this.backgroundGrid.width = this.columns * UI.CELL_WIDTH;
+    this.backgroundGrid.height = this.rows * UI.CELL_HEIGHT;
     this.backgroundCtx = this.backgroundGrid.getContext("2d");
     this.backgroundCtx.fillStyle = '#000';
     this.backgroundCtx.fillRect(0, 0, this.backgroundGrid.width, this.backgroundGrid.height);
@@ -54,35 +58,35 @@ export default class UI {
     for (var x = 0; x < this.columns; x++) {
       for (var y = 0; y < this.rows; y++) {
         var pos = UI.posFromCell(x, y);
-        this.backgroundCtx.fillRect(pos.x + UI.cellWidth / 2 - 1, pos.y + UI.cellHeight / 2 - 1, 2, 2);
+        this.backgroundCtx.fillRect(pos.x + UI.CELL_WIDTH / 2 - 1, pos.y + UI.CELL_HEIGHT / 2 - 1, 2, 2);
       }
     }
 
     this.operatorGrid = createElement('canvas', 'operators', this.grid);
-    this.operatorGrid.width = this.columns * UI.cellWidth;
-    this.operatorGrid.height = this.rows * UI.cellHeight;
+    this.operatorGrid.width = this.columns * UI.CELL_WIDTH;
+    this.operatorGrid.height = this.rows * UI.CELL_HEIGHT;
     this.operatorCtx = this.operatorGrid.getContext("2d");
-    this.operatorCtx.fillStyle = this.themeOperatorColor;
-    this.operatorCtx.strokeStyle = this.themeOperatorColor;
+    this.operatorCtx.fillStyle = UI.COLOR_OPERATOR;
+    this.operatorCtx.strokeStyle = UI.COLOR_OPERATOR;
     this.operatorCtx.font = '16px grid';
     this.operatorCtx.textBaseline = "middle";
     this.operatorCtx.textAlign = "center";
     this.operatorCtx.imageSmoothingEnabled = false;
-    //this.operatorCtx.shadowBlur = 15;
-    //this.operatorCtx.shadowColor = this.themeOperatorColor;
+    this.operatorCtx.shadowBlur = 15;
+    this.operatorCtx.shadowColor = UI.COLOR_FIELD;
 
     this.dataGrid = createElement('canvas', 'data', this.grid);
-    this.dataGrid.width = this.columns * UI.cellWidth;
-    this.dataGrid.height = this.rows * UI.cellHeight;
+    this.dataGrid.width = this.columns * UI.CELL_WIDTH;
+    this.dataGrid.height = this.rows * UI.CELL_HEIGHT;
     this.dataCtx = this.dataGrid.getContext("2d");
-    this.dataCtx.fillStyle = 'white';
-    this.dataCtx.strokeStyle = 'white';
+    this.dataCtx.fillStyle = UI.COLOR_DATA;
+    this.dataCtx.strokeStyle = UI.COLOR_DATA;
     this.dataCtx.font = '16px grid';
     this.dataCtx.textBaseline = "middle";
     this.dataCtx.textAlign = "center";
     this.dataCtx.imageSmoothingEnabled = false;
-    //this.dataCtx.shadowBlur = 15;
-    //this.dataCtx.shadowColor = "rgba(255, 255, 255, 0.4)";
+    this.dataCtx.shadowBlur = 8;
+    this.dataCtx.shadowColor = "rgba(0, 0, 0, 1)";
 
     // Event/UI handling
     this.dataGrid.addEventListener('click', this.handleGridClick.bind(this));
@@ -128,20 +132,20 @@ export default class UI {
     var hPos = UI.posFromCell(this.hoverCellPos.x, this.hoverCellPos.y);
     this.operatorCtx.strokeStyle = 'rgba(255, 255, 255, 0.1)';
     this.operatorCtx.strokeRect(hPos.x, hPos.y,
-                            UI.cellWidth, UI.cellHeight);
+                            UI.CELL_WIDTH, UI.CELL_HEIGHT);
     // Draw focus
     var fPos = UI.posFromCell(this.focusedCellPos.x, this.focusedCellPos.y);
     this.operatorCtx.fillStyle = 'rgba(255, 255, 255, 0.3)';
     this.operatorCtx.fillRect(fPos.x, fPos.y,
-                            UI.cellWidth, UI.cellHeight);
+                            UI.CELL_WIDTH, UI.CELL_HEIGHT);
 
     // Draw operators
-    this.operatorCtx.fillStyle = 'cyan';
+    this.operatorCtx.fillStyle = UI.COLOR_OPERATOR;
     var operatorContent = this.machine.operators.getContent();
     for (var coords in operatorContent) {
       var cPos = Grid.parseCoords(coords);
       var pos = UI.posFromCell(cPos.x, cPos.y);
-      operatorRenderer(operatorContent[coords], this.operatorCtx, pos.x, pos.y, UI.cellWidth, UI.cellHeight);
+      operatorRenderer(operatorContent[coords], this.operatorCtx, pos.x, pos.y, UI.CELL_WIDTH, UI.CELL_HEIGHT);
     };
 
     // Draw data
@@ -150,7 +154,7 @@ export default class UI {
     for (var coords in dataContent) {
       var cPos = Grid.parseCoords(coords);
       var pos = UI.posFromCell(cPos.x, cPos.y);
-      this.dataCtx.fillText(dataContent[coords], pos.x + UI.cellWidth / 2, pos.y + UI.cellHeight / 2);
+      this.dataCtx.fillText(dataContent[coords], pos.x + UI.CELL_WIDTH / 2, pos.y + UI.CELL_HEIGHT / 2);
     };
     
   }
