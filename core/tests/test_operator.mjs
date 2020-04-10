@@ -25,7 +25,8 @@ test.step(
     test.assertEqual(a.outputs['c'].nextValue, 4, "execute(): nextValue set after execution");
 
     test.assertEqual(m.data.get(3, 6), null, "commit(): Data not set before commit");
-    a.commit();
+    a.commitClearInputs();
+    a.commitOutputs();
     test.assertEqual(m.data.get(3, 6), 4, "commit(): Data set after commit");
   },
   function testRegistration() {

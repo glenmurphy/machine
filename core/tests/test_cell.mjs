@@ -19,7 +19,7 @@ test.step(
     a.offsetX += 3;
     test.assertEqual(b.pos.x, 9, "Nested cell modified x position");
   },
-  function testOrientation() {
+  function testOrientationTransforms() {
     
   }
 );

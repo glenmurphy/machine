@@ -28,8 +28,8 @@ class Cell {
 
   setOrientation(orientation) {
     orientation = orientation % 4;
-    if (isNaN(orientation))
-      throw new Error("Invalid orientation");
+    if (Number.isNaN(orientation))
+      throw new Error("Invalid orientation: " + orientation);
     this.localOrientation = orientation;
   }
 
