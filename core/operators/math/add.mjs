@@ -3,6 +3,7 @@ import Operator from '../../operator.mjs';
 export default class Add extends Operator {
   static type = 'ADD';
   static letter = '+';
+  static description = "";
   
   init() {
     this.addInput('a', -1, 0);

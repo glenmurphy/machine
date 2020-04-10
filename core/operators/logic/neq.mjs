@@ -1,9 +1,10 @@
 import Operator from '../../operator.mjs';
 
 export default class Neq extends Operator {
-  static type = 'Neq';
+  static type = 'NEQ';
   static letter = '!';
-  
+  static description = "Checks if a doesn't equal b";
+
   init() {
     this.addInput('a', -1, 0);
     this.addInput('b', +1, 0);

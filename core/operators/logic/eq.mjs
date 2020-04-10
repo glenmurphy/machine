@@ -1,8 +1,9 @@
 import Operator from '../../operator.mjs';
 
 export default class Eq extends Operator {
-  static type = 'Eq';
+  static type = 'EQ';
   static letter = '=';
+  static description = "Checks if both inputs are equal";
   
   init() {
     this.addInput('a', -1, 0);

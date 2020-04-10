@@ -3,6 +3,7 @@ import Operator from '../../operator.mjs';
 export default class Filter extends Operator {
   static type = 'FLT';
   static letter = 'F';
+  static description = "Passes the data on if the second input is 1"
   
   init() {
     this.addInput('a', -1, 0);

@@ -3,7 +3,8 @@ import Operator from '../../operator.mjs';
 export default class GT extends Operator {
   static type = 'GT';
   static letter = '>';
-  
+  static description = "Checks if a is greater than b"
+
   init() {
     this.addInput('a', -1, 0);
     this.addInput('b', +1, 0);

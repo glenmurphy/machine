@@ -3,6 +3,7 @@ import Operator from '../../operator.mjs';
 export default class Rnd extends Operator {
   static type = 'RND';
   static letter = 'R';
+  static description = "";
   
   init() {
     this.addInput('min', -1, 0);

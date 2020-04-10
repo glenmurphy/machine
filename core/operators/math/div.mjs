@@ -3,7 +3,8 @@ import Operator from '../../operator.mjs';
 export default class Div extends Operator {
   static type = 'DIV';
   static letter = '/';
-  
+  static description = "";
+
   init() {
     this.addInput('a', -1, 0);
     this.addInput('b', +1, 0);

@@ -3,6 +3,7 @@ import Operator from '../../operator.mjs';
 export default class Pow extends Operator {
   static type = 'POW';
   static letter = '^';
+  static description = "";
   
   init() {
     this.addInput('a', -1, 0);

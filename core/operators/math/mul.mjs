@@ -3,6 +3,7 @@ import Operator from '../../operator.mjs';
 export default class Mul extends Operator {
   static type = 'MUL';
   static letter = '*';
+  static description = "";
   
   init() {
     this.addInput('a', -1, 0);

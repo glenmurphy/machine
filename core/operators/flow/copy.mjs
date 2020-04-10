@@ -1,7 +1,7 @@
 import Operator from '../../operator.mjs';
 
 export default class Copy extends Operator {
-  static type = 'Copy';
+  static type = 'COPY';
   static letter = 'C';
   
   init() {

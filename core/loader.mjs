@@ -13,15 +13,21 @@ function loadVersion001(machine, input) {
   input.grid.forEach(function (def) {
     machine.setData(def.x, def.y, def.value);
   });
+  return true;
 }
 
 export function load(machine, input) {
-  switch(input.version) {
-    case 1:
-      loadVersion001(machine, input);
-      break;
-    default:
-      console.log("Version not defined");
+  try {
+    switch(input.version) {
+      case 1:
+        return loadVersion001(machine, input);
+        break;
+      default:
+        console.log("Version not defined");
+    }
+  } catch(e) {
+    console.log(`Error: ${e.message}`);
+    return false;
   }
 }
 

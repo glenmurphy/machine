@@ -3,6 +3,7 @@ import Operator from '../../operator.mjs';
 export default class And extends Operator {
   static type = 'AND';
   static letter = '&';
+  static description = "Checks if both inputs are true";
   
   init() {
     this.addInput('a', -1, 0);

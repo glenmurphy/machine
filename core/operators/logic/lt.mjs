@@ -3,7 +3,8 @@ import Operator from '../../operator.mjs';
 export default class LT extends Operator {
   static type = 'LT';
   static letter = '<';
-  
+  static description = "Checks if a is less than b";
+
   init() {
     this.addInput('a', -1, 0);
     this.addInput('b', +1, 0);
