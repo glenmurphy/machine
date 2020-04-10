@@ -13,7 +13,7 @@ export default class Eq extends Operator {
   process() {
     var a = this.getInput('a');
     var b = this.getInput('b');
-    this.outputs['c'].setNextValue((a == b) ? 1 : 0);
+    this.queueOutput('c', (a == b) ? 1 : 0);
   }
 }
 
