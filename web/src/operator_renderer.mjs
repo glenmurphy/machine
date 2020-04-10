@@ -41,6 +41,6 @@ export default function(operator, ctx, x, y) {
   if (letter in renderers) {
     return renderers[letter](operator, ctx, x, y);
   } else {
-    ctx.fillText(letter, x + UI.CELL_WIDTH / 2 + 1, y + UI.CELL_HEIGHT / 2 + 1);
+    ctx.fillText(letter, x + UI.CELL_WIDTH / 2, y + UI.CELL_HEIGHT / 2);
   }
 }

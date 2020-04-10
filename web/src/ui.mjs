@@ -41,30 +41,51 @@ export default class UI {
     this.machine;
     this.load();
 
+    // what grid pixel coordinate the viewport is focused on
+    this.viewFocus = {
+      x : 200,
+      y : 200
+    }
+
     this.node = createElement('div', 'main', document.body);
     this.grid = createElement('div', 'grid', this.node);
 
-    // Canvas setup
-    this.columns = 40;
-    this.rows = 25;
-
     this.backgroundGrid = createElement('canvas', 'operators', this.grid);
-    this.backgroundGrid.width = this.columns * UI.CELL_WIDTH;
-    this.backgroundGrid.height = this.rows * UI.CELL_HEIGHT;
+    this.operatorGrid = createElement('canvas', 'operators', this.grid);
+    this.dataGrid = createElement('canvas', 'data', this.grid);
+
+    // Event/UI handling
+    this.mouseDown = false;
+    window.addEventListener('resize', this.handleResize.bind(this));
+    this.dataGrid.addEventListener('click', this.handleGridClick.bind(this));
+
+    window.addEventListener('mousemove', this.handleMouseMove.bind(this));
+    window.addEventListener('mousedown', this.handleMouseDown.bind(this));
+    window.addEventListener('mouseup', this.handleMouseUp.bind(this));
+
+    document.addEventListener('keydown', this.handleKeyDown.bind(this));
+    this.focusedCellPos = { x : -1, y : -1};
+    this.hoverCellPos = { x : -1, y : -1};
+
+    this.initCanvases();
+    this.play();
+  }
+
+  initCanvases() {
+    this.backgroundGrid.width = window.innerWidth + UI.CELL_WIDTH;
+    this.backgroundGrid.height = window.innerHeight + UI.CELL_HEIGHT;
     this.backgroundCtx = this.backgroundGrid.getContext("2d");
     this.backgroundCtx.fillStyle = '#000';
     this.backgroundCtx.fillRect(0, 0, this.backgroundGrid.width, this.backgroundGrid.height);
     this.backgroundCtx.fillStyle = '#111';
-    for (var x = 0; x < this.columns; x++) {
-      for (var y = 0; y < this.rows; y++) {
-        var pos = UI.posFromCell(x, y);
-        this.backgroundCtx.fillRect(pos.x + UI.CELL_WIDTH / 2 - 1, pos.y + UI.CELL_HEIGHT / 2 - 1, 2, 2);
+    for (var x = 0; x < this.backgroundGrid.width; x += UI.CELL_WIDTH) {
+      for (var y = 0; y < this.backgroundGrid.height; y += UI.CELL_HEIGHT) {
+        this.backgroundCtx.fillRect(x + UI.CELL_WIDTH / 2 - 1, y + UI.CELL_HEIGHT / 2 - 1, 2, 2);
       }
     }
 
-    this.operatorGrid = createElement('canvas', 'operators', this.grid);
-    this.operatorGrid.width = this.columns * UI.CELL_WIDTH;
-    this.operatorGrid.height = this.rows * UI.CELL_HEIGHT;
+    this.operatorGrid.width = window.innerWidth;
+    this.operatorGrid.height = window.innerHeight;
     this.operatorCtx = this.operatorGrid.getContext("2d");
     this.operatorCtx.fillStyle = UI.COLOR_OPERATOR;
     this.operatorCtx.strokeStyle = UI.COLOR_OPERATOR;
@@ -75,9 +96,8 @@ export default class UI {
     this.operatorCtx.shadowBlur = 15;
     this.operatorCtx.shadowColor = UI.COLOR_FIELD;
 
-    this.dataGrid = createElement('canvas', 'data', this.grid);
-    this.dataGrid.width = this.columns * UI.CELL_WIDTH;
-    this.dataGrid.height = this.rows * UI.CELL_HEIGHT;
+    this.dataGrid.width = window.innerWidth;
+    this.dataGrid.height = window.innerHeight;
     this.dataCtx = this.dataGrid.getContext("2d");
     this.dataCtx.fillStyle = UI.COLOR_DATA;
     this.dataCtx.strokeStyle = UI.COLOR_DATA;
@@ -87,17 +107,11 @@ export default class UI {
     this.dataCtx.imageSmoothingEnabled = false;
     this.dataCtx.shadowBlur = 8;
     this.dataCtx.shadowColor = "rgba(0, 0, 0, 1)";
+  }
 
-    // Event/UI handling
-    this.dataGrid.addEventListener('click', this.handleGridClick.bind(this));
-    this.dataGrid.addEventListener('mousemove', this.handleGridMouseMove.bind(this));
-    document.addEventListener('keydown', this.handleKeyDown.bind(this));
-    this.focusedCellPos = { x : -1, y : -1};
-    this.hoverCellPos = { x : -1, y : -1};
-  
+  handleResize() {
+    this.initCanvases();
     this.display();
-
-    this.play();
   }
 
   play() {
@@ -125,9 +139,23 @@ export default class UI {
   }
 
   display() {
-    // Operator layer
+    // Clear layers
     this.operatorCtx.clearRect(0, 0, this.operatorGrid.width, this.operatorGrid.height);
-    
+    this.dataCtx.clearRect(0, 0, this.operatorGrid.width, this.operatorGrid.height);
+
+    // Do scrolling translations
+    this.operatorCtx.save();
+    this.dataCtx.save();
+
+    let translate = {
+      x : this.operatorGrid.width / 2 - this.viewFocus.x,
+      y : this.operatorGrid.height / 2 - this.viewFocus.y,
+    }
+    this.backgroundGrid.style.transform = `translate(${translate.x % UI.CELL_WIDTH - UI.CELL_WIDTH}px,` +
+                                                    `${translate.y % UI.CELL_HEIGHT - UI.CELL_HEIGHT}px)`;
+    this.operatorCtx.translate(translate.x, translate.y);
+    this.dataCtx.translate(translate.x, translate.y);
+
     // Draw hover
     var hPos = UI.posFromCell(this.hoverCellPos.x, this.hoverCellPos.y);
     this.operatorCtx.strokeStyle = 'rgba(255, 255, 255, 0.1)';
@@ -149,14 +177,15 @@ export default class UI {
     };
 
     // Draw data
-    this.dataCtx.clearRect(0, 0, this.dataGrid.width, this.dataGrid.height);
     var dataContent = this.machine.data.getContent();
     for (var coords in dataContent) {
       var cPos = Grid.parseCoords(coords);
       var pos = UI.posFromCell(cPos.x, cPos.y);
       this.dataCtx.fillText(dataContent[coords], pos.x + UI.CELL_WIDTH / 2, pos.y + UI.CELL_HEIGHT / 2);
     };
-    
+
+    this.operatorCtx.restore();
+    this.dataCtx.restore();
   }
 
   save() {
@@ -175,14 +204,54 @@ export default class UI {
     }
   }
 
-  handleGridClick(e) {
-    this.focusedCellPos = UI.cellFromPos(e.offsetX, e.offsetY);
-    this.display();
+  gridPosFromScreen(x, y) {
+    return {
+      x : x - this.operatorGrid.width / 2 + this.viewFocus.x,
+      y : y -  this.operatorGrid.height / 2 + this.viewFocus.y
+    }
   }
 
-  handleGridMouseMove(e) {
-    this.hoverCellPos = UI.cellFromPos(e.offsetX, e.offsetY);
-    this.display();
+  handleMouseMove(e) {
+    if (this.mouseDown) {
+      this.viewFocus.x += this.mouseDown.lastX - e.offsetX;
+      this.viewFocus.y += this.mouseDown.lastY - e.offsetY;
+      this.mouseDown.lastX = e.offsetX;
+      this.mouseDown.lastY = e.offsetY;
+      this.display();
+    } else {
+      var gridPos = this.gridPosFromScreen(e.offsetX, e.offsetY);
+      this.hoverCellPos = UI.cellFromPos(gridPos.x, gridPos.y);
+      this.display();
+    }
+  }
+
+  distance(x, y, x2, y2) {
+    return Math.sqrt(Math.pow(x2 - x, 2) + Math.pow(y2 - y, 2));
+  }
+
+  handleMouseDown(e) {
+    this.mouseDown = {
+      initX : e.offsetX,
+      initY : e.offsetY,
+      lastX : e.offsetX,
+      lastY : e.offsetY,
+      dragged : false
+    };
+  }
+
+  handleMouseUp(e) {
+    if (this.mouseDown && 
+        this.distance(this.mouseDown.lastX, this.mouseDown.lastY,
+                      this.mouseDown.initX, this.mouseDown.initY) < UI.CELL_WIDTH / 2) {
+      var gridPos = this.gridPosFromScreen(e.offsetX, e.offsetY);
+      this.focusedCellPos = UI.cellFromPos(gridPos.x, gridPos.y);
+      this.display();
+    }
+    this.mouseDown = false;
+  }
+
+  handleGridClick(e) {
+
   }
 
   createMov(orientation) {
