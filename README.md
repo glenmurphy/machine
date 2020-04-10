@@ -1,4 +1,4 @@
-# Machine Alfa
+# MACHINE ALFA
 Demo:
 
 - http://machine.glenmurphy.com/
@@ -18,5 +18,5 @@ Usage:
 - spacebar to play/pause
 - shift+arrows to lay down directional wire
 - number keys to add data
-- backspace to delete
+- backspace or 'x' to delete
 - F2/F4 is save/load
