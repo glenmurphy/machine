@@ -15,6 +15,13 @@ export function getHost(address, operator) {
 // this is a default class/interface for external (X) operators 
 // you need to extend this class
 export class Host {
+  static STATE = {
+    DISCONNECTED : 'Disconnected',
+    CONNECTING : 'Connecting',
+    CONNECTED : 'Connected',
+    ERROR : 'Error'
+  }
+
   constructor(operator) {
     this.operator = operator;
   }

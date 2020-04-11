@@ -15,6 +15,7 @@ function createElement(type, className, parent) {
 }
 export default class UI {
   static COLOR_OPERATOR = 'rgb(0, 255, 150)';
+  static COLOR_ERROR = 'rgb(255, 0, 0)';
   static COLOR_WIRE = 'rgb(0, 255, 150)';
   static COLOR_FIELD = 'rgba(0, 255, 150, 0.25)';
   static COLOR_DATA = 'white';

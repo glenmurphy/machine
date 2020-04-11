@@ -4,8 +4,15 @@ import {getHost} from '../../host.mjs';
 export default class External extends Operator {
   static type = 'EXT';
   static letter = 'X';
-  static description = 'External interface'
-  
+  static description = 'External interface';
+
+  static STATE = {
+    DISCONNECTED : 'Disconnected',
+    CONNECTING : 'Connecting',
+    CONNECTED : 'Connected',
+    ERROR : 'Error'
+  }
+
   // iXaaaal
   //  o
   init() {
@@ -20,11 +27,7 @@ export default class External extends Operator {
 
     this.addOutput('l', 5, 0);
 
-    this.connection = {
-      address : '',
-      connected : false,
-      host : null,
-    };
+    this.resetConnectionState();
   }
 
   validateInputs() { 
@@ -33,9 +36,15 @@ export default class External extends Operator {
     var c = this.getInput('c');
     var d = this.getInput('d');
     var valid = (a && b && c && d);
-    if (this.connection.connected && !valid)
-      this.disconnect();
-    return valid;
+    
+    if (!valid) {
+      if (this.connection.host)
+        this.disconnect();
+      else if (this.connection.state != External.STATE.DISCONNECTED)
+        this.resetConnectionState();
+      return false;
+    }
+    return true;
   }
 
   process() {
@@ -54,7 +63,7 @@ export default class External extends Operator {
       return;
     }
 
-    if (!this.connection.connected)
+    if (!this.connection.host)
       return;
 
     if (this.getInput('i')) {
@@ -63,35 +72,41 @@ export default class External extends Operator {
     }
   }
 
+  resetConnectionState() {
+    this.connection = {
+      address : '',
+      host : '',
+      state : External.STATE.DISCONNECTED
+    }
+    this.data = [];
+  }
+
   disconnect() {
-    if (this.connection.connected) {
+    if (this.connection.host) {
       this.connection.host.operatorDisconnect(this);
       this.queueOutput('l', null);
     }
 
-    this.connection = {
-      address : '',
-      host : '',
-      connected : false
-    }
-    this.data = [];
+    this.resetConnectionState();
   }
 
   connected(host) {
     // Do something with the module.
     this.connection.host = host;
-    this.connection.connected = true;
+    this.connection.state = External.STATE.CONNECTED;
     this.queueOutput('l', 1);
   }
 
-  connectionError() {}
+  connectionError() {
+    this.connection.state = External.STATE.ERROR;
+  }
 
   connect(address) {
     this.disconnect();
     this.connection = {
       address : address,
       host : '',
-      connected : false
+      state : External.STATE.CONNECTING
     }
     getHost(address, this);
   }

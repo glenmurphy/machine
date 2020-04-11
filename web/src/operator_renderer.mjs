@@ -35,8 +35,22 @@ renderers['.'] = function(operator, ctx, x, y) {
 }
 
 renderers['X'] = function(operator, ctx, x, y) {
-  if (operator.connection.connected) {
+  if (operator.connection.address) {
     ctx.save();
+    switch (operator.connection.state) {
+      case 'Connecting':
+        ctx.fillStyle = UI.COLOR_FIELD;
+        break;
+      case 'Connected':
+        ctx.fillStyle = UI.COLOR_OPERATOR;
+        break;
+      case 'Error':
+        ctx.fillStyle = UI.COLOR_ERROR;
+        break;
+      case 'Disconnected':
+        throw new Error('wat');
+        break;
+    }
     ctx.fillRect(x - 1, y - 1, UI.CELL_WIDTH + 2, UI.CELL_HEIGHT + 2);
     ctx.fillStyle = 'black';
     ctx.fillText('X', x + UI.CELL_WIDTH / 2, y + UI.CELL_HEIGHT / 2);
