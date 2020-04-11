@@ -21,6 +21,8 @@ export class Host {
 
   input() {}
 
+  // Methods for subclasses to call - you should think of these
+  // as protected methods
   setConnected() {
     this.operator.hostConnected(this);
   }
@@ -34,6 +36,7 @@ export class Host {
     this.operator.appendData(data);
   }
 
+  // External interfaces
   operatorDisconnect(operator) {}
 }
 

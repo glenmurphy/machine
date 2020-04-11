@@ -37,18 +37,18 @@ export default class Puzzle1 extends Host {
     }
   }
 
-  startPuzzle() {
+  generatePuzzle() {
     this.problems = [];
     this.answers = [];
     for (var i = 0; i < 8; i++) {
       this.problems[i] = parseInt(Math.floor(Math.random() * 8));
       this.answers[i] = this.problems[i] * 2;
     }
-    this.problemIndex = 0;
-    this.setData([this.problems[this.problemIndex]]);
   }
 
-  echo(input) {
-    this.appendData([input]);
+  startPuzzle() {
+    this.generatePuzzle();
+    this.problemIndex = 0;
+    this.setData([this.problems[this.problemIndex]]);
   }
 }
