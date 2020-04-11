@@ -34,6 +34,18 @@ renderers['.'] = function(operator, ctx, x, y) {
   ctx.restore();
 }
 
+renderers['X'] = function(operator, ctx, x, y) {
+  if (operator.connection.connected) {
+    ctx.save();
+    ctx.fillRect(x - 1, y - 1, UI.CELL_WIDTH + 2, UI.CELL_HEIGHT + 2);
+    ctx.fillStyle = 'black';
+    ctx.fillText('X', x + UI.CELL_WIDTH / 2, y + UI.CELL_HEIGHT / 2);
+    ctx.restore();
+  } else {
+    ctx.fillText('X', x + UI.CELL_WIDTH / 2, y + UI.CELL_HEIGHT / 2);
+  }
+}
+
 // Passing in the coords like this is daft; should just be translating on the 
 // parent context first
 export default function(operator, ctx, x, y) {
