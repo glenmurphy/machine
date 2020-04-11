@@ -32,7 +32,10 @@ export default class External extends Operator {
     var b = this.getInput('b');
     var c = this.getInput('c');
     var d = this.getInput('d');
-    return (a && b && c && d);
+    var valid = (a && b && c && d);
+    if (this.connection.connected && !valid)
+      this.disconnect();
+    return valid;
   }
 
   process() {
@@ -63,6 +66,7 @@ export default class External extends Operator {
   disconnect() {
     if (this.connection.connected) {
       this.connection.host.operatorDisconnect(this);
+      this.queueOutput('l', null);
     }
 
     this.connection = {
