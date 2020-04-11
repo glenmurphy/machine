@@ -98,12 +98,18 @@ export default class Operator extends Cell {
     this.outputs[outputName] = new IOCell(this, this.machine, offsetX, offsetY);
   }
 
-  setData(data) {
-    this.data = data;
+  validateData(data) {
+    if (!Array.isArray(data))
+      throw new Error("Data is not an array"); 
+    return true;
   }
-  
+  setData(data) {
+    if (this.validateData(data))
+      this.data = data;
+  }
   appendData(data) {
-    this.data = this.data.concat(data);
+    if (this.validateData(data))
+      this.data = this.data.concat(data);
   }
 
   setInput(name, value) {

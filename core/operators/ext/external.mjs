@@ -66,7 +66,7 @@ export default class External extends Operator {
     if (!this.connection.host)
       return;
 
-    if (this.getInput('i')) {
+    if (this.getInput('i') != null) {
       this.connection.host.input(this.getInput('i'));
       this.queueClearInput('i');
     }
@@ -90,11 +90,19 @@ export default class External extends Operator {
     this.resetConnectionState();
   }
 
-  connected(host) {
+  hostConnected(host) {
     // Do something with the module.
     this.connection.host = host;
     this.connection.state = External.STATE.CONNECTED;
     this.queueOutput('l', 1);
+  }
+
+  hostDisconnected(host) {
+    if (host != this.connection.host)
+      throw new Error("Host that disconnected was the wrong one");
+    this.queueOutput('l', null);
+    this.connection.state = External.STATE.ERROR;
+    this.connection.host = null;
   }
 
   connectionError() {

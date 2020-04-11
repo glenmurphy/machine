@@ -22,7 +22,10 @@ export class Host {
   input() {}
 
   setConnected() {
-    this.operator.connected(this);
+    this.operator.hostConnected(this);
+  }
+  setDisconnected() {
+    this.operator.hostDisconnected(this);
   }
   setData(data) {
     this.operator.setData(data);
