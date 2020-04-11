@@ -64,6 +64,8 @@ export default class Operator extends Cell {
     this.inputs = {};
     this.outputs = {};
     this.state = Operator.STATE.WAITING;
+    this.data = [];
+
     this.init();
 
     this.machine.addOperator(this);
@@ -94,6 +96,10 @@ export default class Operator extends Cell {
         throw new Error("Added output  '"+outputName+"' is at same location as existing output '" + id + "'");
     }
     this.outputs[outputName] = new IOCell(this, this.machine, offsetX, offsetY);
+  }
+
+  setData(data) {
+    this.data = data;
   }
 
   setInput(name, value) {
@@ -177,11 +183,14 @@ export default class Operator extends Cell {
   }
 
   export() {
-    return {
+    var output = {
       type : this.constructor.type,
       x : this.offsetX,
       y : this.offsetY,
       orientation : this.localOrientation
     }
+    if (this.data)
+      output.data = this.data;
+    return output;
   }
 }

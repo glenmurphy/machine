@@ -13,6 +13,7 @@ const app = express();
 
 express.static.mime.define({'application/javascript': ['mjs', 'js']});
 app.use( '/core', express.static( __dirname + '/../core' ));
+app.use( '/hosts', express.static( __dirname + '/../hosts/' ));
 app.use( '/', express.static( __dirname + '/src' ));
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname + '/src/index.html'));

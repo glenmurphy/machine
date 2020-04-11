@@ -46,7 +46,7 @@ export default class Machine {
       this.operators.getContent()[coords].validate();
     };
 
-    // Tell operators to process input
+    // Tell valid operators to process input
     for (let coords in this.operators.getContent()) {
       this.operators.getContent()[coords].execute();
     };

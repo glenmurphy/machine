@@ -7,8 +7,8 @@ function loadVersion001(machine, input) {
       throw new Error("Operator '" + def.type + "' not defined");
     }
     var o = new Operator.typeMap[def.type](machine, def.x, def.y);
-    if (def.orientation)
-      o.setOrientation(def.orientation);
+    if (def.orientation) o.setOrientation(def.orientation);
+    if (def.data) o.setData(def.data);
   });
   input.grid.forEach(function (def) {
     machine.setData(def.x, def.y, def.value);
