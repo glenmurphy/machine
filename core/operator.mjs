@@ -101,6 +101,10 @@ export default class Operator extends Cell {
   setData(data) {
     this.data = data;
   }
+  
+  appendData(data) {
+    this.data = this.data.concat(data);
+  }
 
   setInput(name, value) {
     if (!(name in this.inputs))

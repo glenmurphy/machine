@@ -1,5 +1,5 @@
 # MACHINE ALFA
-Demo:
+Demo (lags master, doesn't contain all features):
 
 - http://machine.glenmurphy.com/
 

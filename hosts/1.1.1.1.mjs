@@ -4,11 +4,18 @@ import {Host} from '../core/host.mjs';
 export default class Time extends Host {
   constructor(operator) {
     super(operator);
-    this.setConnected();
+
+    // simulate lag
+    this.connected = false;
     this.echoInterval = setInterval(this.echoTime.bind(this), 1000);
   }
 
   echoTime() {
+    if (!this.connected) {
+      this.connected = true;
+      this.setConnected();
+    }
+
     var hours = String(new Date().getHours());
     if (hours.length < 2) hours = '0' + hours;
 
