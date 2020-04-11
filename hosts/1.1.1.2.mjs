@@ -1,4 +1,9 @@
-// time
+// Echo host - echos input back one second later
+//
+// Ideally we make this a singleton and it echos across all 
+// connected clients; might be too powerful though since it 
+// would offer data teleportation, so would need to combine
+// with the economy system
 import {Host} from '../core/host.mjs';
 
 export default class Echo extends Host {
@@ -15,9 +20,5 @@ export default class Echo extends Host {
 
   echo(input) {
     this.appendData([input]);
-  }
-
-  operatorDisconnect(operator) {
-    clearInterval(this.echoInterval);
   }
 }
