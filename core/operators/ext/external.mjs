@@ -16,7 +16,7 @@ export default class External extends Operator {
   // iXaaaal
   //  o
   init() {
-    this.addInput('i', -1, 0);
+    this.addInput('i', 0, 0);
 
     this.addOutput('o', 0, +1);
 
@@ -72,6 +72,7 @@ export default class External extends Operator {
     }
   }
 
+  // Self methods (protected)
   resetConnectionState() {
     this.connection = {
       address : '',
@@ -89,7 +90,22 @@ export default class External extends Operator {
 
     this.resetConnectionState();
   }
+  
+  connectionError() {
+    this.connection.state = External.STATE.ERROR;
+  }
 
+  connect(address) {
+    this.disconnect();
+    this.connection = {
+      address : address,
+      host : '',
+      state : External.STATE.CONNECTING
+    }
+    getHost(address, this);
+  }
+
+  // Host methods (public)
   hostConnected(host) {
     // Do something with the module.
     this.connection.host = host;
@@ -103,20 +119,6 @@ export default class External extends Operator {
     this.queueOutput('l', null);
     this.connection.state = External.STATE.ERROR;
     this.connection.host = null;
-  }
-
-  connectionError() {
-    this.connection.state = External.STATE.ERROR;
-  }
-
-  connect(address) {
-    this.disconnect();
-    this.connection = {
-      address : address,
-      host : '',
-      state : External.STATE.CONNECTING
-    }
-    getHost(address, this);
   }
 }
 

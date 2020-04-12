@@ -6,16 +6,15 @@ export default class Time extends Host {
     super(operator);
 
     // simulate lag
-    this.connected = false;
-    this.echoInterval = setInterval(this.echoTime.bind(this), 1000);
+    setTimeout(this.setConnected.bind(this), 500);
+  }
+
+  input(input) {
+    if (!this.echoTimeout)
+      this.echoTimeout = setTimeout(this.echoTime.bind(this), 1000);
   }
 
   echoTime() {
-    if (!this.connected) {
-      this.connected = true;
-      this.setConnected();
-    }
-
     var hours = String(new Date().getHours());
     if (hours.length < 2) hours = '0' + hours;
 
@@ -28,9 +27,12 @@ export default class Time extends Host {
       minutes.charAt(0),
       minutes.charAt(1)
     ]);
+    
+    this.echoTimeout = null;
   }
 
   operatorDisconnect(operator) {
-    clearInterval(this.echoInterval);
+    clearTimeout(this.echoTimeout);
+    this.echoTimeout = null;
   }
 }

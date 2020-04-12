@@ -33,7 +33,48 @@ renderers['.'] = function(operator, ctx, x, y) {
   ctx.closePath();
   ctx.restore();
 }
+// bridge
+renderers[','] = function(operator, ctx, x, y) {
+  var orientation = operator.pos.orientation;
+  var vert = Boolean(orientation == Cell.ORIENTATION.UP || orientation == Cell.ORIENTATION.DOWN);
+  var hori = !vert;
+  var from = {
+    x : x + UI.CELL_WIDTH / 2,
+    y : y + UI.CELL_HEIGHT / 2
+  }
+  var to = {
+    x : vert ? from.x : (orientation == Cell.ORIENTATION.RIGHT ? from.x + UI.CELL_WIDTH * 2 : from.x - UI.CELL_WIDTH * 2),
+    y : hori ? from.y : (orientation == Cell.ORIENTATION.DOWN ? from.y + UI.CELL_HEIGHT * 2 : from.y - UI.CELL_HEIGHT * 2)
+  }
+  ctx.save();
+  ctx.fillStyle = UI.COLOR_OPERATOR;
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.arc(from.x, from.y, UI.CELL_WIDTH * 0.1, 0, 2 * Math.PI);
+  ctx.fill();
 
+  ctx.strokeStyle = UI.COLOR_WIRE; 
+  ctx.lineWidth = 0.5; 
+  ctx.beginPath();
+  ctx.moveTo(from.x, from.y);
+  ctx.lineTo(to.x, to.y);
+  ctx.stroke();
+  ctx.fill();
+  ctx.closePath();
+  ctx.restore();
+}
+renderers['B'] = function(operator, ctx, x, y) {
+  if (operator.full) {
+    ctx.save();
+    ctx.fillStyle = UI.COLOR_ERROR;
+    ctx.fillRect(x - 1, y - 1, UI.CELL_WIDTH + 2, UI.CELL_HEIGHT + 2);
+    ctx.fillStyle = 'black';
+    ctx.fillText('B', x + UI.CELL_WIDTH / 2, y + UI.CELL_HEIGHT / 2);
+    ctx.restore();
+  } else {
+    ctx.fillText('B', x + UI.CELL_WIDTH / 2, y + UI.CELL_HEIGHT / 2);
+  }
+}
 renderers['X'] = function(operator, ctx, x, y) {
   if (operator.connection.address) {
     ctx.save();

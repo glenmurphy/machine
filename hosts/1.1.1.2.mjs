@@ -8,8 +8,6 @@ import {Host} from '../core/host.mjs';
 
 export default class Echo extends Host {
   constructor(operator) {
-    if (singleton) return singleton;
-
     super(operator);
     this.setConnected();
   }

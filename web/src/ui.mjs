@@ -2,7 +2,7 @@ import Operator from '/core/operator.mjs'
 import Grid from '/core/grid.mjs'
 import Cell from '/core/cell.mjs'
 import * as Loader from '/core/loader.mjs';
-import {Mov} from '/core/operators/index.mjs';
+import {Mov, Bridge} from '/core/operators/index.mjs';
 import operatorRenderer from './operator_renderer.mjs';
 import Machine from '/core/machine.mjs';
 import GetExample from './examples.mjs';
@@ -261,8 +261,11 @@ export default class UI {
 
   }
 
-  createMov(orientation) {
-    var o = new Mov(this.machine, this.focusedCellPos.x, this.focusedCellPos.y);
+  createMov(orientation, bridge) {
+    if (bridge)
+      var o = new Bridge(this.machine, this.focusedCellPos.x, this.focusedCellPos.y);
+    else 
+      var o = new Mov(this.machine, this.focusedCellPos.x, this.focusedCellPos.y);
     o.setOrientation(orientation);
   }
 
@@ -290,20 +293,20 @@ export default class UI {
       this.machine.deleteCell(this.focusedCellPos.x, this.focusedCellPos.y);
     } else if (e.keyCode == 37) { // left arrow
       if (e.shiftKey)
-        this.createMov(Cell.ORIENTATION.LEFT);
-      this.focusedCellPos.x -= 1;
+        this.createMov(Cell.ORIENTATION.LEFT, e.ctrlKey);
+      this.focusedCellPos.x -= e.ctrlKey ? 2 : 1;
     } else if (e.keyCode == 39) { // Right arrow
       if (e.shiftKey)
-        this.createMov(Cell.ORIENTATION.RIGHT);
-      this.focusedCellPos.x += 1;
+        this.createMov(Cell.ORIENTATION.RIGHT, e.ctrlKey);
+      this.focusedCellPos.x += e.ctrlKey ? 2 : 1;
     } else if (e.keyCode == 38) { // Up arrow
       if (e.shiftKey)
-        this.createMov(Cell.ORIENTATION.UP);
-      this.focusedCellPos.y -= 1;
+        this.createMov(Cell.ORIENTATION.UP, e.ctrlKey);
+      this.focusedCellPos.y -= e.ctrlKey ? 2 : 1;
     } else if (e.keyCode == 40) { // Down arrow
       if (e.shiftKey)
-        this.createMov(Cell.ORIENTATION.DOWN);
-      this.focusedCellPos.y += 1; 
+        this.createMov(Cell.ORIENTATION.DOWN, e.ctrlKey);
+      this.focusedCellPos.y += e.ctrlKey ? 2 : 1; 
     } else {
       //console.log("undefined input");
     }
