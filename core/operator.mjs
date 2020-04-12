@@ -192,6 +192,13 @@ export default class Operator extends Cell {
     this.state = Operator.STATE.WAITING;
   }
 
+  import(data) {
+    this.offsetX = data.x;
+    this.offsetY = data.y;
+    this.localOrientation = data.orientation | Cell.ORIENTATION.UP;
+    this.data = data.data;
+  }
+
   export() {
     var output = {
       type : this.constructor.type,

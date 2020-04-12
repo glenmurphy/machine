@@ -6,9 +6,9 @@ function loadVersion001(machine, input) {
     if (!(def.type in Operator.typeMap)) {
       throw new Error("Operator '" + def.type + "' not defined");
     }
+    // we should just have the opposite of 'import()';
     var o = new Operator.typeMap[def.type](machine, def.x, def.y);
-    if (def.orientation) o.setOrientation(def.orientation);
-    if (def.data) o.setData(def.data);
+    o.import(def);
   });
   input.grid.forEach(function (def) {
     machine.setData(def.x, def.y, def.value);
@@ -44,7 +44,7 @@ export function save(machine) {
 
   var dataContent = machine.data.getContent();
   for (var coords in dataContent) {
-    if (!dataContent[coords]) continue;
+    if (typeof dataContent[coords] == 'undefined' || dataContent[coords] == null) continue;
 
     var pos = Grid.parseCoords(coords);
 
