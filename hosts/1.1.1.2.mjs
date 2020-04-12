@@ -7,6 +7,8 @@
 import {Host} from '../core/host.mjs';
 
 export default class Echo extends Host {
+  static address = '1.1.1.2';
+
   constructor(operator) {
     super(operator);
     this.setConnected();

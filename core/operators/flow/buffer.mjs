@@ -14,12 +14,14 @@ export default class Buffer extends Operator {
   init() {
     this.addInput('a', -1, 0);
     this.addInput('b', +1, 0);
+    
+    this.addInput('e', 0, 0);
 
     this.addOutput('c', 0, +1);
   }
 
   validateInputs() {
-    return (typeof this.getInput('a') != 'undefined' || this.getInput('b'))
+    return (typeof this.getInput('a') != 'undefined' || this.getInput('b') || this.getInput('e') !== null)
   }
 
   get full() {
@@ -29,6 +31,12 @@ export default class Buffer extends Operator {
   process() {
     var a = this.getInput('a');
     var b = this.getInput('b');
+    var e = this.getInput('e');
+
+    if (typeof e != 'undefined') {
+      this.queueClearInput('e');
+      this.data = [];
+    }
 
     if (typeof a != 'undefined' && !this.full) {
       this.data.push(a);

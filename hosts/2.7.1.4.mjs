@@ -4,6 +4,8 @@
 import {Host} from '../core/host.mjs';
 
 export default class Puzzle1 extends Host {
+  static address = '2.7.1.4';
+
   constructor(operator) {
     super(operator);
     this.setConnected();

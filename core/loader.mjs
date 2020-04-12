@@ -52,7 +52,7 @@ export function save(machine) {
       value : dataContent[coords],
       x : pos.x,
       y : pos.y
-    });     
+    });
   }
 
   return output;
