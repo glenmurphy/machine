@@ -16,6 +16,8 @@ export default class Await extends Operator {
     var a = this.getInput('a');
     var b = this.getInput('b');
     if (a != undefined && b != undefined) {
+      this.queueClearInput('a');
+      this.queueClearInput('b');
       this.queueOutput('c', a);
       this.queueOutput('d', b);
     }

@@ -16,7 +16,7 @@ export default class External extends Operator {
   // iXaaaal
   //  o
   init() {
-    this.addInput('i', 0, 0);
+    this.addInput('i', -1, 0);
 
     this.addOutput('o', 0, +1);
 
@@ -68,7 +68,7 @@ export default class External extends Operator {
 
     if (this.getInput('i') != null) {
       this.connection.host.input(this.getInput('i'));
-      this.queueClearInput('i');
+      //this.queueClearInput('i');
     }
   }
 
