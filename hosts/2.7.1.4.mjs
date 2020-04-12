@@ -27,7 +27,7 @@ export default class Puzzle1 extends Host {
 
   generatePuzzle() {
     this.string = [];
-    this.answer = Math.floor(Math.random() * 11);
+    this.answer = Math.floor(Math.random() * 10) + 1;
     for (var i = 0; i < this.answer; i++) {
       this.string.push(Math.floor(Math.random()*10));
     }
