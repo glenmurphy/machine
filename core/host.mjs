@@ -28,6 +28,9 @@ export class Host {
   setDisconnected() {
     this.operator.hostDisconnected(this);
   }
+  setRestarted() {
+    this.operator.hostRestarted(this);
+  }
   setData(data) {
     this.operator.setData(data);
   }

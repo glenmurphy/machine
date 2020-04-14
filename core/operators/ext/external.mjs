@@ -41,7 +41,7 @@ export default class External extends Operator {
       if (this.connection.host)
         this.disconnect();
       else if (this.connection.state != External.STATE.DISCONNECTED)
-        this.resetConnectionState();
+        this.reset();
       return false;
     }
     return true;
@@ -130,6 +130,15 @@ export default class External extends Operator {
     this.queueOutput('l', null);
     this.connection.state = External.STATE.ERROR;
     this.connection.host = null;
+  }
+
+  hostRestarted(host) {
+    if (this.state == Operator.STATE.OFF)
+      return;
+    if (host != this.connection.host)
+      throw new Error("Host that restarted was the wrong one");
+    this.connection.state = External.STATE.CONNECTED;
+    this.queueOutput('l', 1);
   }
 }
 

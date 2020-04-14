@@ -20,6 +20,7 @@ export default class Puzzle1 extends Host {
         // correct answer
         console.log("correct");
         this.answer = null;
+        this.setRestarted();
       } else {
         console.log("wrong");
         this.setDisconnected();

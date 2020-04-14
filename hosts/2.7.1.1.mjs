@@ -13,27 +13,23 @@ export default class Puzzle1 extends Host {
 
   input(inputValue) {
     if (!this.problems) {
-      switch (inputValue) {
-        case '5':
-          this.startPuzzle();
-          break;
-        default:
-          alert("Multiply all outputs by two and return them\nInput a 5 to start");
-      }
+      console.log("Multiply all outputs by two and return them\nInput a 5 to start");
+      this.startPuzzle();
     } else {
       if (inputValue == this.answers[this.problemIndex]) {
         // correct answer
         if (this.problemIndex == this.answers.length - 1) {
           // finished problems
-          alert("ALL CORRECT");
+          console.log(this.address + " correct");
           this.problems = null;
           this.answers = null;
           this.problemIndex = null;
+          this.setRestarted();
         } else {
           this.setData([this.problems[++this.problemIndex]]);
         }
       } else {
-        alert("WRONG");
+        console.log(this.address + " incorrect");
         this.setDisconnected();
       }
     }
