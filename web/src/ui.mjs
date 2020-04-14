@@ -15,13 +15,14 @@ function createElement(type, className, parent) {
 }
 export default class UI {
   static COLOR_OPERATOR = 'rgb(0, 255, 150)';
-  static COLOR_OPERATOR_OFF = 'rgb(160, 160, 160)';
+  static COLOR_OPERATOR_GLOW = 'rgba(0, 255, 150, 0.65)';
+  static COLOR_OPERATOR_OFF = 'rgb(255, 128, 0)';
 
   static COLOR_ERROR = 'rgb(255, 0, 0)';
   static COLOR_DATA = 'white';
   static COLOR_INIT = 'rgb(128, 128, 128)';
 
-  static COLOR_GRID = '#222';
+  static COLOR_GRID = '#161616';
   static GRID_FONT = '16px grid, Consolas, Menlo';
 
   static CELL_WIDTH = 12;
@@ -98,7 +99,7 @@ export default class UI {
     this.operatorCtx.textAlign = "center";
     this.operatorCtx.imageSmoothingEnabled = false;
     this.operatorCtx.shadowBlur = 15;
-    this.operatorCtx.shadowColor = UI.COLOR_FIELD;
+    this.operatorCtx.shadowColor = UI.COLOR_OPERATOR_GLOW;
 
     this.dataGrid.width = window.innerWidth;
     this.dataGrid.height = window.innerHeight;

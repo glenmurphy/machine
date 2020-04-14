@@ -21,7 +21,7 @@ renderers['.'] = function(operator, ctx, x, y) {
     x : vert ? from.x : (orientation == Cell.ORIENTATION.RIGHT ? from.x + UI.CELL_WIDTH : from.x - UI.CELL_WIDTH),
     y : hori ? from.y : (orientation == Cell.ORIENTATION.DOWN ? from.y + UI.CELL_HEIGHT : from.y - UI.CELL_HEIGHT)
   }
-  ctx.globalAlpha = 0.5;
+  ctx.globalAlpha = 0.6;
   ctx.beginPath();
   ctx.moveTo(from.x, from.y);
   ctx.lineTo(to.x, to.y);
@@ -91,7 +91,10 @@ renderers['X'] = function(operator, ctx, x, y) {
 export default function(operator, ctx, x, y) {
   var letter = operator.constructor.letter;
   var color = (operator.state == Operator.STATE.OFF) ? UI.COLOR_OPERATOR_OFF : UI.COLOR_OPERATOR;
+  
+  
   ctx.save();
+  ctx.shadowBlur = (operator.state == Operator.STATE.OFF) ? 0 : 12;
   ctx.fillStyle = color;
   ctx.strokeStyle = color;
   
