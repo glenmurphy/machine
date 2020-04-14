@@ -302,8 +302,11 @@ export default class UI {
   handleKeyDown(e) {
     var key = e.key;
     if (e.keyCode == 32) {
-      //this.playPause();
       this.powerToggle();
+    } else if (e.keyCode == 219) { // [
+      this.playPause();
+    } else if (e.keyCode == 221) { // ]
+      this.step();
     } else if (e.keyCode == 113) { // F2
       this.save();
     } else if (e.keyCode == 115) { // F4
