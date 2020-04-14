@@ -1,7 +1,6 @@
 export function getHost(address, operator) {
   // TODO: figure out external IPs
   // if the address is a file
-  console.log(address);
   import('/hosts/'+address+'.mjs')
     .then((hostModule) => {
       new hostModule.default(operator);
@@ -37,7 +36,9 @@ export class Host {
   }
 
   // External interfaces
-  operatorDisconnect(operator) {}
+  operatorDisconnect(operator) {
+    this.operator = null;
+  }
 }
 
 export default 1;

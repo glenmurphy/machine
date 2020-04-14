@@ -11,8 +11,8 @@ export default class Mov extends Operator {
   }
 
   process() {
-    this.queueClearInput('a');
     this.queueOutput('c', this.getInput('a'));
+    this.queueClearInput('a');
   }
 }
 

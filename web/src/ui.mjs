@@ -15,10 +15,12 @@ function createElement(type, className, parent) {
 }
 export default class UI {
   static COLOR_OPERATOR = 'rgb(0, 255, 150)';
+  static COLOR_OPERATOR_OFF = 'rgb(160, 160, 160)';
+
   static COLOR_ERROR = 'rgb(255, 0, 0)';
-  static COLOR_WIRE = 'rgb(0, 255, 150)';
-  static COLOR_FIELD = 'rgba(0, 255, 150, 0.25)';
   static COLOR_DATA = 'white';
+  static COLOR_INIT = 'rgb(128, 128, 128)';
+
   static COLOR_GRID = '#222';
   static GRID_FONT = '16px grid, Consolas, Menlo';
 
@@ -119,15 +121,27 @@ export default class UI {
   play() {
     this.updateInterval = setInterval(this.step.bind(this), 100);
   }
+  
   pause() {
     clearInterval(this.updateInterval);
     this.updateInterval = null;
   }
+
   playPause() {
     if (this.updateInterval) {
       this.pause();
     } else {
       this.play();
+    }
+  }
+
+  powerToggle() {
+    if (!this.off) {
+      this.machine.powerDown();
+      this.off = true;
+    } else {
+      this.machine.powerUp();
+      this.off = false;
     }
   }
 
@@ -181,8 +195,23 @@ export default class UI {
       operatorRenderer(operatorContent[coords], this.operatorCtx, pos.x, pos.y, UI.CELL_WIDTH, UI.CELL_HEIGHT);
     };
 
-    // Draw data
+    // Draw init and data
+    var initContent = this.machine.init.getContent();
     var dataContent = this.machine.data.getContent();
+
+    this.dataCtx.fillStyle = UI.COLOR_INIT;
+    this.dataCtx.strokeStyle = UI.COLOR_INIT;
+    for (var coords in initContent) {
+      // Don't draw init values if data exists in same space
+      if (dataContent[coords])
+        continue;
+      var cPos = Grid.parseCoords(coords);
+      var pos = UI.posFromCell(cPos.x, cPos.y);
+      this.dataCtx.fillText(initContent[coords], pos.x + UI.CELL_WIDTH / 2, pos.y + UI.CELL_HEIGHT / 2);
+    };
+
+    this.dataCtx.fillStyle = UI.COLOR_DATA;
+    this.dataCtx.strokeStyle = UI.COLOR_DATA;
     for (var coords in dataContent) {
       var cPos = Grid.parseCoords(coords);
       var pos = UI.posFromCell(cPos.x, cPos.y);
@@ -272,13 +301,14 @@ export default class UI {
   handleKeyDown(e) {
     var key = e.key;
     if (e.keyCode == 32) {
-      this.playPause();
+      //this.playPause();
+      this.powerToggle();
     } else if (e.keyCode == 113) { // F2
       this.save();
     } else if (e.keyCode == 115) { // F4
       this.load();
     } else if (key == Number(key)) {
-      this.machine.setData(this.focusedCellPos.x, this.focusedCellPos.y, key);
+      this.machine.setInit(this.focusedCellPos.x, this.focusedCellPos.y, key);
       this.focusedCellPos.x += 1;
     } else if (key == key.toString().toUpperCase()) {
       // Insert operator

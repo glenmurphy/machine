@@ -12,6 +12,11 @@ class IOCell extends Cell {
     return this.machine.getData(this.pos.x, this.pos.y);
   }
 
+  reset() {
+    this.queued = false;
+    this.nextValue = null;
+  }
+
   setNextValue(value) {
     this.queued = true;
     this.nextValue = value;
@@ -21,8 +26,7 @@ class IOCell extends Cell {
     if (!this.queued)
       return;
     this.forceDataValue(this.nextValue);
-    this.nextValue = null;
-    this.queued = false;
+    this.reset();
   }
 
   forceDataValue(value) {
@@ -48,6 +52,9 @@ export default class Operator extends Cell {
   }
 
   static STATE = {
+    // Off - no power
+    OFF : 'Off',
+
     // The operator is ready to process input
     WAITING : 'Waiting',
 
@@ -63,7 +70,7 @@ export default class Operator extends Cell {
     this.machine = machine;
     this.inputs = {};
     this.outputs = {};
-    this.state = Operator.STATE.WAITING;
+    this.state = Operator.STATE.OFF;
     this.data = [];
 
     this.init();
@@ -160,6 +167,9 @@ export default class Operator extends Cell {
 
   // Check that inputs are valid
   validate() {
+    if (this.state == Operator.STATE.OFF)
+      return;
+
     if (this.validateInputs())
       this.state = Operator.STATE.READY;
     else
@@ -170,6 +180,7 @@ export default class Operator extends Cell {
   execute() {
     if (this.state != Operator.STATE.READY)
       return;
+    
     this.process();
     this.state = Operator.PROCESSED
   }
@@ -179,6 +190,9 @@ export default class Operator extends Cell {
   }
 
   commitClearInputs() {
+    if (this.state == Operator.STATE.OFF)
+      return;
+    
     for (let id in this.inputs) {
       this.commitClearInput(id);
     }
@@ -186,17 +200,45 @@ export default class Operator extends Cell {
   }
 
   commitOutputs() {
+    if (this.state == Operator.STATE.OFF)
+      return;
+
     for (let id in this.outputs) {
       this.commitOutput(id);
     }
     this.state = Operator.STATE.WAITING;
   }
 
+  powerDown() {
+    if (this.state == Operator.STATE.OFF)
+      return;
+
+    this.state = Operator.STATE.OFF;
+    this.reset();
+  }
+  
+  powerUp() {
+    if (!this.machine.isPowered(this.pos.x, this.pos.y))
+      return;
+
+    this.state = Operator.STATE.READY;
+    this.reset();
+  }
+
+  reset() {
+    this.data = [];
+    for (let id in this.outputs) {
+      this.outputs[id].reset();
+    }
+    for (let id in this.inputs) {
+      this.inputs[id].reset();
+    }
+  }
+
   import(data) {
     this.offsetX = data.x;
     this.offsetY = data.y;
     this.localOrientation = data.orientation | Cell.ORIENTATION.UP;
-    this.data = data.data;
   }
 
   export() {
@@ -206,8 +248,6 @@ export default class Operator extends Cell {
       y : this.offsetY,
       orientation : this.localOrientation
     }
-    if (this.data)
-      output.data = this.data;
     return output;
   }
 }

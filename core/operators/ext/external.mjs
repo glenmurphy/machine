@@ -27,7 +27,7 @@ export default class External extends Operator {
 
     this.addOutput('l', 5, 0);
 
-    this.resetConnectionState();
+    this.reset();
   }
 
   validateInputs() { 
@@ -72,23 +72,26 @@ export default class External extends Operator {
     }
   }
 
-  // Self methods (protected)
-  resetConnectionState() {
+  reset() {
+    super.reset(); // forgetting to do this is bad - queued outputs still happen
     this.connection = {
       address : '',
       host : '',
+      pairingCode : '',
       state : External.STATE.DISCONNECTED
     }
     this.data = [];
   }
 
+  // Self methods (protected)
   disconnect() {
     if (this.connection.host) {
       this.connection.host.operatorDisconnect(this);
       this.queueOutput('l', null);
+      this.connection.host = '';
     }
 
-    this.resetConnectionState();
+    this.reset();
   }
   
   connectionError() {
@@ -102,11 +105,19 @@ export default class External extends Operator {
       host : '',
       state : External.STATE.CONNECTING
     }
+    
+    // we should use async/await for this
     getHost(address, this);
   }
 
   // Host methods (public)
   hostConnected(host) {
+    if (this.state == Operator.STATE.OFF)
+      return;
+
+    if (this.connection.state != External.STATE.CONNECTING || this.connection.host)
+      throw new Error("Already have a host");
+
     // Do something with the module.
     this.connection.host = host;
     this.connection.state = External.STATE.CONNECTED;

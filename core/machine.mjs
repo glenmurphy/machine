@@ -10,9 +10,13 @@ import Cell from './cell.mjs';
 
 export default class Machine {
   constructor() {
-    this.operators = new Grid();
-    this.data = new Grid();
+    this.operators = new Grid();  // our operators (instructions)
+    this.init = new Grid();       // initial data  (variables)
+    this.data = new Grid();       // live data     (volative memory)
     this.stepCount = 0;
+
+    // Eventually replace this with a grid
+    this.powered = true;      
   }
 
   addOperator(operator) {
@@ -20,6 +24,14 @@ export default class Machine {
     if (this.operators.get(operator.pos.x, operator.pos.y)) {
       console.log("Warning: An operator was already occupying that position");
     }
+
+    // TODO: figure out if region is powered
+    if (!this.isPowered(operator.pos.x, operator.pos.y)) {
+      operator.powerDown();
+    } else {
+      operator.powerUp();
+    }
+
     this.operators.set(operator.pos.x, operator.pos.y, operator);
   }
 
@@ -32,12 +44,65 @@ export default class Machine {
   }
 
   setData(x, y, value) {
-    this.data.set(x, y, value);
+    if (value === null) {
+      this.data.set(x, y, null);
+      return true;
+    }
+
+    if (isNaN(value))
+      return false;
+    
+    this.data.set(x, y, parseInt(value) % 100);
+  }
+
+  setInit(x, y, value) {
+    value = parseInt(value) % 100;
+    this.init.set(x, y, value);
+    this.setData(x, y, value);
   }
 
   deleteCell(x, y) {
     this.operators.set(x, y, null);
     this.data.set(x, y, null);
+    this.init.set(x, y, null);
+  }
+
+  isPowered(x, y) {
+    return this.powered;
+  }
+
+  // TODO: apply to a rect
+  powerUp() {
+    if (this.powered)
+      return;
+
+    console.log("On");
+    this.powered = true;
+    this.data = new Grid();
+
+    // Copy initializers to data
+    for (let coords in this.init.getContent()) {
+      var pos = Grid.parseCoords(coords);
+      this.setData(pos.x, pos.y, this.init.getContent()[coords]);
+    }
+
+    // Power on our operators
+    for (let coords in this.operators.getContent()) {
+      this.operators.getContent()[coords].powerUp();
+    };
+  }
+
+  // TODO: apply to a rect
+  powerDown() {
+    if (!this.powered)
+      return;
+    console.log("Off");
+    this.powered = false;
+    this.data = new Grid();
+    
+    for (let coords in this.operators.getContent()) {
+      this.operators.getContent()[coords].powerDown();
+    };
   }
 
   step() {
@@ -58,6 +123,7 @@ export default class Machine {
     for (let coords in this.operators.getContent()) {
       this.operators.getContent()[coords].commitClearInputs();
     };
+
     for (let coords in this.operators.getContent()) {
       this.operators.getContent()[coords].commitOutputs();
     };
