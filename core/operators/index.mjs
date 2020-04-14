@@ -1,5 +1,6 @@
 export {default as And} from './logic/and.mjs'
 export {default as Eq} from './logic/eq.mjs'
+export {default as Exists} from './logic/exists.mjs'
 export {default as GT} from './logic/gt.mjs'
 export {default as LT} from './logic/lt.mjs'
 export {default as Neq} from './logic/neq.mjs'
