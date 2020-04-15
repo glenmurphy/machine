@@ -1,5 +1,5 @@
 import * as test from './test.mjs';
-import Cell from '../cell.mjs';
+import Cell from '../core/cell.mjs';
 
 test.beginTest("Cell Test");
 

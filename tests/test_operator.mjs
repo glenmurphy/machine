@@ -1,8 +1,8 @@
 import * as test from './test.mjs';
 
-import Machine from '../machine.mjs';
-import Add from '../operators/math/add.mjs';
-import Operator from '../operator.mjs';
+import Machine from '../core/machine.mjs';
+import Add from '../core/operators/math/add.mjs';
+import Operator from '../core/operator.mjs';
 
 test.beginTest("Operator Test");
 

@@ -221,7 +221,7 @@ export default class Operator extends Cell {
     if (!this.machine.isPowered(this.pos.x, this.pos.y))
       return;
 
-    this.state = Operator.STATE.READY;
+    this.state = Operator.STATE.WAITING;
     this.reset();
   }
 

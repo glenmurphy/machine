@@ -75,8 +75,6 @@ export default class Machine {
   powerUp() {
     if (this.powered)
       return;
-
-    console.log("On");
     this.powered = true;
     this.data = new Grid();
 
@@ -96,7 +94,6 @@ export default class Machine {
   powerDown() {
     if (!this.powered)
       return;
-    console.log("Off");
     this.powered = false;
     this.data = new Grid();
     

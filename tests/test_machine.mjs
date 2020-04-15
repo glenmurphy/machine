@@ -1,7 +1,7 @@
 import * as test from './test.mjs';
 
-import Machine from '../machine.mjs';
-import Add from '../operators/math/add.mjs';
+import Machine from '../core/machine.mjs';
+import Add from '../core/operators/math/add.mjs';
 
 test.beginTest("Machine Test");
 test.step(

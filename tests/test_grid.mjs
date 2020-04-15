@@ -1,5 +1,5 @@
 import * as test from './test.mjs';
-import Grid from '../grid.mjs';
+import Grid from '../core/grid.mjs';
 
 test.beginTest("Grid Test");
 

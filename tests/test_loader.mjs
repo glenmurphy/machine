@@ -1,9 +1,9 @@
 import * as test from './test.mjs';
 
-import Machine from '../machine.mjs';
-import * as Loader from '../loader.mjs';
-import Add from '../operators/math/add.mjs';
-import Sub from '../operators/math/sub.mjs';
+import Machine from '../core/machine.mjs';
+import * as Loader from '../core/loader.mjs';
+import Add from '../core/operators/math/add.mjs';
+import Sub from '../core/operators/math/sub.mjs';
 
 test.beginTest("Loader Test");
 
@@ -11,7 +11,7 @@ test.step(
   function testSave() {
     var m = new Machine();
     var a = new Add(m, 4, 5);
-    m.setData(1, 5, 1);
+    m.setInit(1, 5, 1);
 
     var output = Loader.save(m);
 
@@ -20,9 +20,9 @@ test.step(
     test.assertEqual(output.operators[0].x, 4, "Operator export X");
     test.assertEqual(output.operators[0].y, 5, "Operator export Y");
     
-    test.assertEqual(output.grid[0].value, 1, "Data export VALUE");
-    test.assertEqual(output.grid[0].x, 1, "Data export X");
-    test.assertEqual(output.grid[0].y, 5, "Data export Y");
+    test.assertEqual(output.init[0].value, 1, "Data export VALUE");
+    test.assertEqual(output.init[0].x, 1, "Data export X");
+    test.assertEqual(output.init[0].y, 5, "Data export Y");
   },
   function testLoad() {
     var m = new Machine();
@@ -32,7 +32,7 @@ test.step(
         { type: 'ADD', x: 4, y: 5 },
         { type: 'SUB', x: 3, y: 5 }
       ],
-      grid: [ { value: 1, x: '2', y: '5' } ]
+      init: [ { value: 1, x: '2', y: '5' } ]
     }
     Loader.load(m, data);
     test.assertEqual(m.operators.get(4, 5).constructor.type, 'ADD', "ADD operator loaded");
@@ -43,8 +43,8 @@ test.step(
     var m = new Machine();
     var a = new Add(m, 4, 5);
     var b = new Sub(m, 3, 5);
-    m.setData(2, 5, 3);
-    m.setData(4, 5, 1);
+    m.setInit(2, 5, 3);
+    m.setInit(4, 5, 1);
 
     var n = new Machine();
     var saved = Loader.save(m);
