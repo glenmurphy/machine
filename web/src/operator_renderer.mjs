@@ -52,6 +52,14 @@ renderers[','] = function(operator, ctx, x, y) {
   ctx.stroke();
   ctx.fill();
 }
+renderers['#'] = function(operator, ctx, x, y) {
+  ctx.globalAlpha = 0.1;
+  ctx.fillRect(x, y, UI.CELL_WIDTH, UI.CELL_HEIGHT);
+  if (operator.data[0]) {
+    ctx.globalAlpha = 1.0;
+    ctx.fillText(operator.data[0], x + UI.CELL_WIDTH / 2, y + UI.CELL_HEIGHT / 2);
+  }
+}
 renderers['B'] = function(operator, ctx, x, y) {
   if (operator.full) {
     ctx.fillStyle = UI.COLOR_ERROR;

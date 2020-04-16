@@ -7,6 +7,8 @@ export {default as Neq} from './logic/neq.mjs'
 export {default as Null} from './logic/null.mjs'
 export {default as Or} from './logic/or.mjs'
 
+export {default as VFD} from './io/vfd.mjs'
+
 export {default as Add} from './math/add.mjs'
 export {default as Div} from './math/div.mjs'
 export {default as Mul} from './math/mul.mjs'
