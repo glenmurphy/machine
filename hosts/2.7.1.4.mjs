@@ -3,7 +3,7 @@
 // Once we've figured this out we'll turn it into a base class
 import {Host} from '../core/host.mjs';
 
-export default class Puzzle1 extends Host {
+export default class Puzzle_2_7_1_4 extends Host {
   static address = '2.7.1.4';
 
   constructor(operator) {
