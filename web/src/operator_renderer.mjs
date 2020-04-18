@@ -21,7 +21,7 @@ renderers['.'] = function(operator, ctx, x, y) {
     x : vert ? from.x : (orientation == Cell.ORIENTATION.RIGHT ? from.x + UI.CELL_WIDTH : from.x - UI.CELL_WIDTH),
     y : hori ? from.y : (orientation == Cell.ORIENTATION.DOWN ? from.y + UI.CELL_HEIGHT : from.y - UI.CELL_HEIGHT)
   }
-  ctx.globalAlpha = 0.6;
+  ctx.globalAlpha = 1.0;
   ctx.beginPath();
   ctx.moveTo(from.x, from.y);
   ctx.lineTo(to.x, to.y);

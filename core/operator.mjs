@@ -182,7 +182,7 @@ export default class Operator extends Cell {
       return;
     
     this.process();
-    this.state = Operator.PROCESSED
+    this.state = Operator.STATE.PROCESSED
   }
 
   process() {

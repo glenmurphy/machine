@@ -23,7 +23,7 @@ export default class UI {
   static COLOR_INIT = 'rgb(128, 128, 128)';
 
   static COLOR_GRID = '#161616';
-  static GRID_FONT = '16px grid, Consolas, Menlo';
+  static GRID_FONT = '14px grid, Consolas, Menlo';
 
   static CELL_WIDTH = 12;
   static CELL_HEIGHT = 14;
@@ -176,17 +176,6 @@ export default class UI {
     this.operatorCtx.translate(translate.x, translate.y);
     this.dataCtx.translate(translate.x, translate.y);
 
-    // Draw hover
-    var hPos = UI.posFromCell(this.hoverCellPos.x, this.hoverCellPos.y);
-    this.operatorCtx.strokeStyle = 'rgba(255, 255, 255, 0.1)';
-    this.operatorCtx.strokeRect(hPos.x, hPos.y,
-                            UI.CELL_WIDTH, UI.CELL_HEIGHT);
-    // Draw focus
-    var fPos = UI.posFromCell(this.focusedCellPos.x, this.focusedCellPos.y);
-    this.operatorCtx.fillStyle = 'rgba(255, 255, 255, 0.3)';
-    this.operatorCtx.fillRect(fPos.x, fPos.y,
-                            UI.CELL_WIDTH, UI.CELL_HEIGHT);
-
     // Draw operators
     this.operatorCtx.fillStyle = UI.COLOR_OPERATOR;
     var operatorContent = this.machine.operators.getContent();
@@ -218,6 +207,17 @@ export default class UI {
       var pos = UI.posFromCell(cPos.x, cPos.y);
       this.dataCtx.fillText(dataContent[coords], pos.x + UI.CELL_WIDTH / 2, pos.y + UI.CELL_HEIGHT / 2);
     };
+
+    // Draw hover
+    var hPos = UI.posFromCell(this.hoverCellPos.x, this.hoverCellPos.y);
+    this.dataCtx.strokeStyle = 'rgba(255, 255, 255, 0.1)';
+    this.dataCtx.strokeRect(hPos.x, hPos.y,
+                            UI.CELL_WIDTH, UI.CELL_HEIGHT);
+    // Draw focus
+    var fPos = UI.posFromCell(this.focusedCellPos.x, this.focusedCellPos.y);
+    this.dataCtx.fillStyle = 'rgba(255, 255, 255, 0.3)';
+    this.dataCtx.fillRect(fPos.x, fPos.y,
+                            UI.CELL_WIDTH, UI.CELL_HEIGHT);
 
     this.operatorCtx.restore();
     this.dataCtx.restore();
@@ -301,7 +301,7 @@ export default class UI {
 
   handleKeyDown(e) {
     var key = e.key;
-    if (e.keyCode == 32) {
+    if (e.keyCode == 32) { // Space
       this.powerToggle();
     } else if (e.keyCode == 219) { // [
       this.playPause();
@@ -311,6 +311,8 @@ export default class UI {
       this.save();
     } else if (e.keyCode == 115) { // F4
       this.load();
+    } else if (e.keyCode == 13) { // Return
+      this.machine.setInit(this.focusedCellPos.x, this.focusedCellPos.y, prompt("Enter value"));
     } else if (key == Number(key)) {
       this.machine.setInit(this.focusedCellPos.x, this.focusedCellPos.y, key);
       this.focusedCellPos.x += 1;

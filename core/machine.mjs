@@ -16,7 +16,7 @@ export default class Machine {
     this.stepCount = 0;
 
     // Eventually replace this with a grid
-    this.powered = true;      
+    this.powered = true;
   }
 
   addOperator(operator) {
