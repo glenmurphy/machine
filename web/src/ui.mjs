@@ -1,11 +1,10 @@
 import Operator from '/core/operator.mjs'
-import Grid from '/core/grid.mjs'
 import Cell from '/core/cell.mjs'
 import * as Loader from '/core/loader.mjs';
 import {Mov, Bridge} from '/core/operators/index.mjs';
-import operatorRenderer from './operator_renderer.mjs';
 import Machine from '/core/machine.mjs';
 import GetExample from './examples.mjs';
+import CanvasRenderer from './renderer_canvas.mjs';
 
 function createElement(type, className, parent) {
   var node = document.createElement(type);
@@ -13,6 +12,7 @@ function createElement(type, className, parent) {
   if (parent) parent.appendChild(node);
   return node;
 }
+
 export default class UI {
   static COLOR_OPERATOR = 'rgb(0, 255, 150)';
   static COLOR_OPERATOR_GLOW = 'rgba(0, 255, 150, 0.65)';
@@ -43,7 +43,7 @@ export default class UI {
   }
 
   constructor(machine) {
-    this.machine;
+    this.machine = machine;
     this.load();
 
     // what grid pixel coordinate the viewport is focused on
@@ -55,14 +55,12 @@ export default class UI {
     this.node = createElement('div', 'main', document.body);
     this.grid = createElement('div', 'grid', this.node);
 
-    this.backgroundGrid = createElement('canvas', 'operators', this.grid);
-    this.operatorGrid = createElement('canvas', 'operators', this.grid);
-    this.dataGrid = createElement('canvas', 'data', this.grid);
+    this.renderer = new CanvasRenderer(this, this.machine, this.grid);
 
     // Event/UI handling
     this.mouseDown = false;
     window.addEventListener('resize', this.handleResize.bind(this));
-    this.dataGrid.addEventListener('click', this.handleGridClick.bind(this));
+    this.grid.addEventListener('click', this.handleGridClick.bind(this));
 
     window.addEventListener('mousemove', this.handleMouseMove.bind(this));
     window.addEventListener('mousedown', this.handleMouseDown.bind(this));
@@ -72,50 +70,12 @@ export default class UI {
     this.focusedCellPos = { x : 0, y : 0};
     this.hoverCellPos = { x : -1000, y : -1000};
 
-    this.initCanvases();
+    this.renderer.init();
     this.play();
   }
 
-  initCanvases() {
-    this.backgroundGrid.width = window.innerWidth + UI.CELL_WIDTH;
-    this.backgroundGrid.height = window.innerHeight + UI.CELL_HEIGHT;
-    this.backgroundCtx = this.backgroundGrid.getContext("2d");
-    this.backgroundCtx.fillStyle = '#000';
-    this.backgroundCtx.fillRect(0, 0, this.backgroundGrid.width, this.backgroundGrid.height);
-    this.backgroundCtx.fillStyle = UI.COLOR_GRID;
-    for (var x = 0; x < this.backgroundGrid.width; x += UI.CELL_WIDTH) {
-      for (var y = 0; y < this.backgroundGrid.height; y += UI.CELL_HEIGHT) {
-        this.backgroundCtx.fillRect(x + UI.CELL_WIDTH / 2 - 1, y + UI.CELL_HEIGHT / 2 - 1, 2, 2);
-      }
-    }
-
-    this.operatorGrid.width = window.innerWidth;
-    this.operatorGrid.height = window.innerHeight;
-    this.operatorCtx = this.operatorGrid.getContext("2d");
-    this.operatorCtx.fillStyle = UI.COLOR_OPERATOR;
-    this.operatorCtx.strokeStyle = UI.COLOR_OPERATOR;
-    this.operatorCtx.font = UI.GRID_FONT;
-    this.operatorCtx.textBaseline = "middle";
-    this.operatorCtx.textAlign = "center";
-    this.operatorCtx.imageSmoothingEnabled = false;
-    this.operatorCtx.shadowBlur = 15;
-    this.operatorCtx.shadowColor = UI.COLOR_OPERATOR_GLOW;
-
-    this.dataGrid.width = window.innerWidth;
-    this.dataGrid.height = window.innerHeight;
-    this.dataCtx = this.dataGrid.getContext("2d");
-    this.dataCtx.fillStyle = UI.COLOR_DATA;
-    this.dataCtx.strokeStyle = UI.COLOR_DATA;
-    this.dataCtx.font = UI.GRID_FONT;
-    this.dataCtx.textBaseline = "middle";
-    this.dataCtx.textAlign = "center";
-    this.dataCtx.imageSmoothingEnabled = false;
-    this.dataCtx.shadowBlur = 8;
-    this.dataCtx.shadowColor = "rgba(0, 0, 0, 1)";
-  }
-
   handleResize() {
-    this.initCanvases();
+    this.renderer.init();
     this.display();
   }
 
@@ -156,71 +116,7 @@ export default class UI {
   }
 
   display() {
-    // As operatorGrid changes far less frequently, we should implement a
-    // dirty/schedule system so we don't redraw it as often
-
-    // Clear layers
-    this.operatorCtx.clearRect(0, 0, this.operatorGrid.width, this.operatorGrid.height);
-    this.dataCtx.clearRect(0, 0, this.dataGrid.width, this.dataGrid.height);
-
-    // Do scrolling translations
-    this.operatorCtx.save();
-    this.dataCtx.save();
-
-    let translate = {
-      x : this.operatorGrid.width / 2 - this.viewFocus.x,
-      y : this.operatorGrid.height / 2 - this.viewFocus.y,
-    }
-    this.backgroundGrid.style.transform = `translate(${translate.x % UI.CELL_WIDTH - UI.CELL_WIDTH}px,` +
-                                                    `${translate.y % UI.CELL_HEIGHT - UI.CELL_HEIGHT}px)`;
-    this.operatorCtx.translate(translate.x, translate.y);
-    this.dataCtx.translate(translate.x, translate.y);
-
-    // Draw operators
-    this.operatorCtx.fillStyle = UI.COLOR_OPERATOR;
-    var operatorContent = this.machine.operators.getContent();
-    for (var coords in operatorContent) {
-      var cPos = Grid.parseCoords(coords);
-      var pos = UI.posFromCell(cPos.x, cPos.y);
-      operatorRenderer(operatorContent[coords], this.operatorCtx, pos.x, pos.y, UI.CELL_WIDTH, UI.CELL_HEIGHT);
-    };
-
-    // Draw init and data
-    var initContent = this.machine.init.getContent();
-    var dataContent = this.machine.data.getContent();
-
-    this.dataCtx.fillStyle = UI.COLOR_INIT;
-    this.dataCtx.strokeStyle = UI.COLOR_INIT;
-    for (var coords in initContent) {
-      // Don't draw init values if data exists in same space
-      if (dataContent[coords])
-        continue;
-      var cPos = Grid.parseCoords(coords);
-      var pos = UI.posFromCell(cPos.x, cPos.y);
-      this.dataCtx.fillText(initContent[coords], pos.x + UI.CELL_WIDTH / 2, pos.y + UI.CELL_HEIGHT / 2);
-    };
-
-    this.dataCtx.fillStyle = UI.COLOR_DATA;
-    this.dataCtx.strokeStyle = UI.COLOR_DATA;
-    for (var coords in dataContent) {
-      var cPos = Grid.parseCoords(coords);
-      var pos = UI.posFromCell(cPos.x, cPos.y);
-      this.dataCtx.fillText(dataContent[coords], pos.x + UI.CELL_WIDTH / 2, pos.y + UI.CELL_HEIGHT / 2);
-    };
-
-    // Draw hover
-    var hPos = UI.posFromCell(this.hoverCellPos.x, this.hoverCellPos.y);
-    this.dataCtx.strokeStyle = 'rgba(255, 255, 255, 0.1)';
-    this.dataCtx.strokeRect(hPos.x, hPos.y,
-                            UI.CELL_WIDTH, UI.CELL_HEIGHT);
-    // Draw focus
-    var fPos = UI.posFromCell(this.focusedCellPos.x, this.focusedCellPos.y);
-    this.dataCtx.fillStyle = 'rgba(255, 255, 255, 0.3)';
-    this.dataCtx.fillRect(fPos.x, fPos.y,
-                            UI.CELL_WIDTH, UI.CELL_HEIGHT);
-
-    this.operatorCtx.restore();
-    this.dataCtx.restore();
+    this.renderer.render();
   }
 
   save() {
@@ -243,8 +139,8 @@ export default class UI {
 
   gridPosFromScreen(x, y) {
     return {
-      x : x - this.operatorGrid.width / 2 + this.viewFocus.x,
-      y : y -  this.operatorGrid.height / 2 + this.viewFocus.y
+      x : x - window.innerWidth / 2 + this.viewFocus.x,
+      y : y -  window.innerHeight / 2 + this.viewFocus.y
     }
   }
 
