@@ -1,4 +1,4 @@
-// This is just a test server - necessary because ES6 doesn't let us host
+// This is a test server - necessary because ES6 doesn't let us host
 // modules on file://
 //
 // To use:
