@@ -22,6 +22,9 @@ export default class Grid {
   }
 
   set(x, y, value) {
+    if (this.content[Grid.coords(x, y)] && this.content[Grid.coords(x, y)].delete)
+      this.content[Grid.coords(x, y)].delete();
+    
     if (value === null || value === undefined)
       delete this.content[Grid.coords(x, y)];
     else

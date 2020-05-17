@@ -239,6 +239,8 @@ export default class Operator extends Cell {
     this.offsetX = data.x;
     this.offsetY = data.y;
     this.localOrientation = data.orientation | Cell.ORIENTATION.UP;
+
+    this.invalidatePos();
   }
 
   export() {
