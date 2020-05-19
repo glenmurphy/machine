@@ -3,6 +3,7 @@ import UI from './ui.mjs'; // for config values
 import Operator from "/core/operator.mjs";
 import Cell from "/core/cell.mjs";
 
+// Convenience function
 function createElement(type, className, parent) {
   var node = document.createElement(type);
   if (className) node.className = className;
@@ -10,6 +11,7 @@ function createElement(type, className, parent) {
   return node;
 }
 
+// Renderers for specific operators
 var renderers = {};
 renderers['_'] = function(operator, ctx, x, y) {
   ctx.globalAlpha = 0.5;
@@ -154,8 +156,8 @@ export default class CanvasRenderer {
     this.operatorCtx.textBaseline = "middle";
     this.operatorCtx.textAlign = "center";
     this.operatorCtx.imageSmoothingEnabled = false;
-    this.operatorCtx.shadowBlur = 15;
-    this.operatorCtx.shadowColor = UI.COLOR_OPERATOR_GLOW;
+    //this.operatorCtx.shadowBlur = 15;
+    //this.operatorCtx.shadowColor = UI.COLOR_OPERATOR_GLOW;
 
     this.dataGrid.width = window.innerWidth;
     this.dataGrid.height = window.innerHeight;
@@ -166,8 +168,8 @@ export default class CanvasRenderer {
     this.dataCtx.textBaseline = "middle";
     this.dataCtx.textAlign = "center";
     this.dataCtx.imageSmoothingEnabled = false;
-    this.dataCtx.shadowBlur = 8;
-    this.dataCtx.shadowColor = "rgba(0, 0, 0, 1)";
+    //this.dataCtx.shadowBlur = 8;
+    //this.dataCtx.shadowColor = "rgba(0, 0, 0, 1)";
   }
 
   render() {
