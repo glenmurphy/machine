@@ -33,3 +33,5 @@ test.step(
     test.assertTrue(Operator.typeMap[Add.type] == Add, "Operator registration for Add ('"+Add.type+"')");
   }
 );
+
+test.end();

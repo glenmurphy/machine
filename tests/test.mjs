@@ -2,6 +2,8 @@
 var name_;
 var errors_ = 0;
 
+var completed_ = 0;
+
 export function start(name) {
   name_ = name;
   log("");
@@ -25,6 +27,14 @@ function logPassed(msg) {
 export function beginTest(title) {
   log("----------------------------------------------------------------------");
   log("\u001b[1;33mBEGIN\u001b[m : " + title);
+}
+
+export function end() {
+  completed_++;
+}
+
+export function testsCompleted() {
+  return completed_;
 }
 
 export function assertTrue(a, description) {
@@ -184,5 +194,9 @@ export function step() {
 
 export function summary() {
   log("\n======================================================================");
-  log("Test Summary: " + errors_ + " errors");
+  if (errors_ > 0) {
+    log("\u001b[31mTest Summary: " + errors_ + " errors\u001b[m");
+  } else {
+    log("\u001b[32mTest Summary: 0 errors\u001b[m");
+  }
 }

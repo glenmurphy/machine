@@ -34,6 +34,7 @@ test.step(
     test.assertEqual(m.data.get(4, 7), 9, "Output created after 2 steps");
   }
 );
+test.end();
 /*
 test.step(
   function testInconsistentLineLength() {

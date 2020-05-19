@@ -11,3 +11,5 @@ test.step(
     test.assertEqual(g.get(1, 4), null, "Getter")
   }
 );
+
+test.end();

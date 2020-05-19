@@ -59,3 +59,5 @@ test.step(
     test.assertEqual(n.getData(3, 6), 2, "Data saved+loaded - SUB post-step");
   },
 );
+
+test.end();
