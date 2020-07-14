@@ -1,7 +1,7 @@
 // Tester.
 var name_;
 var errors_ = 0;
-
+var passed_ = 0;
 var completed_ = 0;
 
 export function start(name) {
@@ -21,6 +21,7 @@ function logFailed(msg) {
 }
 
 function logPassed(msg) {
+  passed_++;
   log("\u001b[32mPASSED\u001b[m: " + msg);
 }
 
@@ -195,8 +196,8 @@ export function step() {
 export function summary() {
   log("\n======================================================================");
   if (errors_ > 0) {
-    log("\u001b[31mTest Summary: " + errors_ + " errors\u001b[m");
+    log("\u001b[31mTESTS COMPLETE: " + passed_ + " passed, " + errors_ + " errors\u001b[m\n");
   } else {
-    log("\u001b[32mTest Summary: 0 errors\u001b[m");
+    log("\u001b[32mTESTS COMPLETE: " + passed_ + " passed, 0 errors\u001b[m\n");
   }
 }

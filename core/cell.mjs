@@ -20,14 +20,14 @@ export default class Cell {
     }
   }
 
-  constructor(parentCell, offsetX, offsetY) {
+  constructor(parentCell, offsetX, offsetY, orientation) {
     this.parentCell = parentCell;
     if (this.parentCell && this.parentCell.addChild) {
       this.parentCell.addChild(this);
     }
     this.offsetX = offsetX;
     this.offsetY = offsetY;
-    this.localOrientation = Cell.ORIENTATION.UP;
+    this.setOrientation(orientation ? orientation : Cell.ORIENTATION.UP);
     this.children = [];
   }
 

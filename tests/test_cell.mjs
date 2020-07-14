@@ -28,8 +28,8 @@ test.step(
     var a = new Cell(null, 6, 5);
     var b = new Cell(a, 3, 7);
     a.setOrientation(Cell.ORIENTATION.RIGHT);
-    test.assertEqual(b.pos.x, -1, "Rotated parent cell");
-    test.assertEqual(b.pos.y, 8, "Rotated parent cell");
+    test.assertEqual(b.pos.x, -1, "Rotated parent cell x");
+    test.assertEqual(b.pos.y, 8, "Rotated parent cell y");
   }
 );
 
